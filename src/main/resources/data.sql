@@ -1,0 +1,2 @@
+INSERT INTO BOOK (AUTHOR,TITLE, PUBLISHER,ADDRESS, YEAR) VALUES
+  ('Lokesh', 'Gupta', 'abc@gmail.com','SDSDSD',123);
