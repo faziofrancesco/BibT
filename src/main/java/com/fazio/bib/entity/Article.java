@@ -14,9 +14,9 @@ import javax.persistence.*;
 @Entity
 
 public class Article implements Citation {
-
-    @Id @GeneratedValue(generator="system-uuid")
-    @GenericGenerator(name="system-uuid", strategy = "uuid")
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id_article")
     private  Integer id;
     @Column(name = "author")
     private String author;

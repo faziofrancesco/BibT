@@ -15,6 +15,8 @@ public class Inproceedings implements Citation{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="id_inproceedings")
+    private Integer id;
     @Column(name = "author")
     private String author;
     @Column(name = "title")

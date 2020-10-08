@@ -15,7 +15,8 @@ import javax.persistence.*;
 public class Misc implements Citation{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-
+    @Column(name="id_misc")
+    private Integer id;
     @Column(name = "author")
     private String author;
     @Column(name = "title")
