@@ -5,13 +5,13 @@ export default class Article extends React.Component {
         super(props);
         this.state = {
             values: {
-                Author: "",
-                Title: "",
-                Journal: "",
-                Year: "",
-                Volume: "",
-                Number: "",
-                Pages: ""
+                author: "",
+                title: "",
+                journal: "",
+                year: "",
+                volume: "",
+                number: "",
+                pages: ""
             },
             isSubmitting: false,
             isError: false
@@ -46,7 +46,7 @@ export default class Article extends React.Component {
                 this.setState({
                     isError: false,
                     message: "",
-                    values: {Author: "", Title: "", Journal: "", Year: "", Volume: "", Number: "", Pages: ""}
+                    values: {author: "", title: "", journal: "", year: "", volume: "", number: "", pages: ""}
                 }),
             1600
         );
@@ -62,86 +62,86 @@ export default class Article extends React.Component {
             <div>
                 <form onSubmit={this.submitForm}>
                     <div className="input-group">
-                        <label htmlFor="Author">Author</label>
+                        <label htmlFor="author">author</label>
                         <input
                             type="text"
-                            name="Author"
-                            id="Author"
-                            value={this.state.values.Author}
+                            name="author"
+                            id="author"
+                            value={this.state.values.author}
                             onChange={this.handleInputChange}
-                            title="Author"
+                            title="author"
 
                         />
                     </div>
                     <div className="input-group">
-                        <label htmlFor="Title">Title</label>
+                        <label htmlFor="title">title</label>
                         <input
                             type="text"
-                            name="Title"
-                            id="Title"
-                            value={this.state.values.Title}
+                            name="title"
+                            id="title"
+                            value={this.state.values.title}
                             onChange={this.handleInputChange}
-                            title="Title"
+                            title="title"
 
                         />
                     </div>
                     <div className="input-group">
-                        <label htmlFor="Journal">Journal</label>
+                        <label htmlFor="journal">journal</label>
                         <input
                             type="text"
-                            name="Journal"
-                            id="Journal"
-                            value={this.state.values.Journal}
+                            name="journal"
+                            id="journal"
+                            value={this.state.values.journal}
                             onChange={this.handleInputChange}
-                            title="Journal"
+                            title="journal"
 
                         />
                     </div>
                     <div className="input-group">
-                        <label htmlFor="Year">Year</label>
+                        <label htmlFor="year">year</label>
                         <input
                             type="number"
-                            name="Year"
-                            id="Year"
-                            value={this.state.values.Year}
+                            name="year"
+                            id="year"
+                            value={this.state.values.year}
                             onChange={this.handleInputChange}
-                            title="Year"
+                            title="year"
 
                         />
                     </div>
                     <div className="input-group">
-                        <label htmlFor="Volume">Volume</label>
+                        <label htmlFor="volume">volume</label>
                         <input
                             type="text"
-                            name="Volume"
-                            id="Volume"
-                            value={this.state.values.Volume}
+                            name="volume"
+                            id="volume"
+                            value={this.state.values.volume}
                             onChange={this.handleInputChange}
-                            title="Volume"
+                            title="volume"
 
                         />
                     </div>
                     <div className="input-group">
-                        <label htmlFor="Number">Number</label>
+                        <label htmlFor="number">number</label>
                         <input
                             type="text"
-                            name="Number"
-                            id="Number"
-                            value={this.state.values.Number}
+                            name="number"
+                            id="number"
+                            value={this.state.values.number}
                             onChange={this.handleInputChange}
-                            title="Number"
+                            title="number"
 
                         />
                     </div>
                     <div className="input-group">
-                        <label htmlFor="Pages">Pages</label>
+                        <label htmlFor="pages">pages</label>
                         <input
                             type="text"
-                            name="Pages"
-                            id="Pages"
-                            value={this.state.values.Pages}
+                            name="pages"
+                            id="pages"
+                            value={this.state.values.pages}
                             onChange={this.handleInputChange}
-                            title="Pages"
+                            title="pages"
 
                         />
                     </div>
