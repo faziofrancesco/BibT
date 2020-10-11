@@ -1,16 +1,19 @@
 import React, {useState} from "react";
 import Nav from "react-bootstrap/Nav"
 import "citation-js";
-import {Link, Route, Switch, useRouteMatch} from "react-router-dom";
+import {Link, Route, Switch, useHistory, useRouteMatch} from "react-router-dom";
 import Add from "./Add";
 import Book from "./book";
 import Article from "./article";
 import Inproceedings from "./inproceedings";
 import Misc from "./misc";
+import List from "./List";
 
 export default function Manage(props) {
     const [stato, setstato] = useState(false);
     let {path, url} = useRouteMatch();
+
+    let history = useHistory()
 
     return (
         <div className={"row"}>
@@ -33,7 +36,12 @@ export default function Manage(props) {
                     <Link to={`${url}/inproceedings`}>Inproceedings</Link>
                     <Link to={`${url}/misc`}>Misc</Link>
                     <Link to={`${url}/add`}>AddFile</Link>
-                    <button placeholder={"return menu"} onClick={() => setstato(false)}>Return Menu</button>
+                    <button placeholder={"return menu"} onClick={() => {
+                        setstato(false);
+                        history.push("/manage");
+                    }}>Return
+                        Menu
+                    </button>
                 </Nav>}
                 }
             </div>
@@ -54,9 +62,14 @@ export default function Manage(props) {
                     <Route exact path={`${path}/Article`}>
                         <Article/>
                     </Route>
+                    <Route exact path={`${path}/list`}>
+                        <List/>
+                    </Route>
+                    
                 </Switch>
             </div>
 
         </div>
     )
 }
+
