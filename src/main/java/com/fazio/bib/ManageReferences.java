@@ -8,8 +8,11 @@ import com.fazio.bib.repository.MiscRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 @RestController
-public class provo {
+public class ManageReferences {
     @Autowired
     BOOKRepository repository;
     @Autowired
@@ -18,12 +21,7 @@ public class provo {
     MiscRepository miscRepository;
     @Autowired
     ArticleRepository articleRepository;
-    @GetMapping(value = "/ciccio")
-    public void ciccio() {
-        Book Book = new Book("sdsdd", "sdsd", "sdsd", "sdsdas", 123);
 
-        repository.save(Book);
-    }
     @PostMapping(value = "/prova")
     public Citation add(@RequestBody Citation citation) {
         if(citation instanceof Misc) {
@@ -44,4 +42,17 @@ public class provo {
         }
         return citation;
     }
+    @GetMapping(value = "/view")
+    public ArrayList<Citation> viewReferences(){
+        ArrayList<Citation> c=new ArrayList<Citation>();
+        c.addAll((Collection<? extends Citation>) miscRepository.findAll());
+        c.addAll((Collection<? extends Citation>) repository.findAll());
+        c.addAll((Collection<? extends Citation>) rep.findAll());
+        c.addAll((Collection<? extends Citation>) articleRepository.findAll());
+        for(int i=0;i<c.size();i++){
+            System.out.println(c.get(i));
+        }
+        return c;
+    }
+
 }
