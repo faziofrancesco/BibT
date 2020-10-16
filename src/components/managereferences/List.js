@@ -87,14 +87,7 @@ export default class List extends React.Component {
             .join('&');
 
         //  let url = `/view/${param.searchTitle}/${param.page}/${param.pageSize}`;
-        fetch("/view", {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-                // 'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: JSON.stringify(param)
-        })
+        fetch("/view?" + new URLSearchParams(param))
             .then(response => response.json())
             .then(({tutorials, totalPages}) => {
                 this.setState({tutorials: tutorials, count: totalPages});
