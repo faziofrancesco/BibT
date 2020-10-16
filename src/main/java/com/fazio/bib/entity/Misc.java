@@ -3,6 +3,7 @@ package com.fazio.bib.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 
@@ -11,11 +12,12 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Table(name = "misc")
 @Entity
+@ToString
 
-public class Misc implements Citation{
+public class Misc implements Citation {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="id_misc")
+    @Column(name = "id_misc")
     private Integer id;
     @Column(name = "author")
     private String author;

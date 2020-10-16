@@ -7,15 +7,11 @@ import com.fazio.bib.repository.InproceedingsRepository;
 import com.fazio.bib.repository.MiscRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
@@ -66,53 +62,75 @@ public class ManageReferences {
         return c;
     }
 
-    @PostMapping(value = "/view")
+    @GetMapping(value = "/view")
     public ResponseEntity<Map<String, Object>> viewReferences(
-            @RequestBody Pages pages) {
+            @RequestParam(required = false) String title,
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "pageSize", defaultValue = "3") int size) {
         try {
 
             List<Citation> cit = new ArrayList<>();
-            Pageable paging = PageRequest.of(pages.getPage(), pages.getPageSize());
-            Page<Book> pageB;
-            Page<Inproceedings> pageI;
-            Page<Misc> pageM;
-            Page<Article> pageA;
-            log.error(pages.getTitle());
-            if (pages.getTitle().equals("")) {
-                pageA = articleRepository.findAll(paging);
-                pageB = repository.findAll(paging);
-                pageM = miscRepository.findAll(paging);
-                pageI = rep.findAll(paging);
+
+            Pageable paging = PageRequest.of(page - 1, size);
+//            Page<Book> pageB;
+//            Page<Inproceedings> pageI;
+//            Page<Misc> pageM;
+//            Page<Article> pageA;
+
+
+            Iterable<Book> pageB;
+            Iterable<Inproceedings> pageI;
+            Iterable<Misc> pageM;
+            Iterable<Article> pageA;
+
+            if ("".equals(title)) {
+
+                pageA = articleRepository.findAll(/*paging*/);
+                pageB = repository.findAll(/*paging*/);
+                pageM = miscRepository.findAll(/*paging*/);
+                pageI = rep.findAll(/*paging*/);
 
             } else {
-                pageA = articleRepository.findByTitle(pages.getTitle(), paging);
-                pageB = repository.findByTitle(pages.getTitle(), paging);
-                pageM = miscRepository.findByTitle(pages.getTitle(), paging);
-                pageI = rep.findByTitle(pages.getTitle(), paging);
+                pageA = articleRepository.findByTitle(title, paging);
+                pageB = repository.findByTitle(title, paging);
+                pageM = miscRepository.findByTitle(title, paging);
+                pageI = rep.findByTitle(title, paging);
 
 
             }
-            cit.addAll(pageA.getContent());
-            cit.addAll(pageB.getContent());
-            cit.addAll(pageM.getContent());
-            cit.addAll(pageI.getContent());
-            log.error(pages.toString());
+            cit.addAll((Collection<? extends Citation>) pageA);
+            cit.addAll((Collection<? extends Citation>) pageB);
+            cit.addAll((Collection<? extends Citation>) pageM);
+            cit.addAll((Collection<? extends Citation>) pageI);
             Map<String, Object> response = new HashMap<>();
             //qui e dove comincia non so come adeguarlo
-            int currentPage = (int) ((pageA.getNumber() + pageB.getNumber() + pageI.getNumber() + pageM.getNumber()) / (pageA.getTotalElements() + pageB.getTotalElements() + pageI.getTotalElements() + pageM.getTotalElements()));
-            int TotalPages = (int) ((pageA.getTotalPages() + pageB.getTotalPages() + pageI.getTotalPages() + pageM.getTotalPages()) / (pageA.getTotalElements() + pageB.getTotalElements() + pageI.getTotalElements() + pageM.getTotalElements()));
-            response.put("tutorials", cit);
-            response.put("currentPage", pageA.getNumber());
-            response.put("totalItems", pageA.getTotalElements() + pageB.getTotalElements() + pageI.getTotalElements() + pageM.getTotalElements());
-            response.put("totalPages", TotalPages);
-            log.error(String.valueOf(currentPage));
-            log.error(String.valueOf(TotalPages));
+            cit.forEach(e -> log.error(e.toString()));
+            if (page == (int) Math.ceil(cit.size() / Double.valueOf(size)) && (cit.size()) % size != 0)
+                response.put("tutorials", cit.subList(size * (page - 1), (size * (page - 1)) + ((cit.size()) % size)));
+            else
+                response.put("tutorials", cit.subList(size * (page - 1), (size * (page - 1)) + (size)));
+            response.put("currentPage", page);//pageA.getNumber() + pageB.getNumber() + pageI.getNumber() + pageM.getNumber());
+            response.put("totalItems", cit.size());
+            response.put("totalPages", (int) Math.ceil(cit.size() / Double.valueOf(size)));
+//            log.error(String.valueOf(pageA.getNumber() + pageB.getNumber() + pageI.getNumber() + pageM.getNumber()));
+//            log.error(String.valueOf(pageA.getTotalElements() + pageB.getTotalElements() + pageI.getTotalElements() + pageM.getTotalElements()));
+//            log.error(String.valueOf(pageA.getTotalPages() + pageB.getTotalPages() + pageI.getTotalPages() + pageM.getTotalPages()));
+//lunghezza array mod 3
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+
+    public static void main(String[] args) {
+        int mostra = 3;
+        int totalElements = 1;
+        int totalPages = 1;
+        System.out.print(
+                (int) Math.ceil(totalElements / Double.valueOf(mostra)));
     }
 }
 
