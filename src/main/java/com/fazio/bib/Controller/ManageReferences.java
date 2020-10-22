@@ -85,16 +85,16 @@ public class ManageReferences {
 
             if ("".equals(title)) {
 
-                pageA = articleRepository.findAll(/*paging*/);
-                pageB = repository.findAll(/*paging*/);
-                pageM = miscRepository.findAll(/*paging*/);
-                pageI = rep.findAll(/*paging*/);
+                pageA = articleRepository.findAll();
+                pageB = repository.findAll();
+                pageM = miscRepository.findAll();
+                pageI = rep.findAll();
 
             } else {
-                pageA = articleRepository.findByTitle(title, paging);
-                pageB = repository.findByTitle(title, paging);
-                pageM = miscRepository.findByTitle(title, paging);
-                pageI = rep.findByTitle(title, paging);
+                pageA = articleRepository.findByTitle(title);
+                pageB = repository.findByTitle(title);
+                pageM = miscRepository.findByTitle(title);
+                pageI = rep.findByTitle(title);
 
 
             }
@@ -125,13 +125,6 @@ public class ManageReferences {
     }
 
 
-    public static void main(String[] args) {
-        int mostra = 3;
-        int totalElements = 1;
-        int totalPages = 1;
-        System.out.print(
-                (int) Math.ceil(totalElements / Double.valueOf(mostra)));
-    }
 }
 
 
