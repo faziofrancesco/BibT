@@ -1,6 +1,6 @@
 import React from "react";
 import "citation-js";
-import BinaryT from "./BinaryT";
+import Grafo from "./Grafo";
 
 export default class CitationTree extends React.Component {
     constructor(props) {
@@ -10,12 +10,24 @@ export default class CitationTree extends React.Component {
         this.onChangeSearchAuthor = this.onChangeSearchAuthor.bind(this);
         this.onChangeProfondita = this.onChangeProfondita.bind(this);
         this.state = {
-            tutorials: [
-                {
-                    name: "",
-                    children: []
-                }
-            ],
+            tutorials: {
+                links: [
+                    {source: "1", target: "2"},
+                    {source: "2", target: "3"},
+                ],
+                nodes: [{
+                    title: "ciao1", id: "1",
+                    author: "ciao1",
+                    intro: "ciao1"
+                }, {
+                    title: "ciao1"
+                    ,
+                    id: "2",
+                    author: "ciao1",
+                    intro: "ciao1"
+                }, {title: "ciao3", id: "3", author: "ciao3", intro: "ciao3"}],
+
+            },
             searchAuthor: "",
             profondita: 3
         };
@@ -65,7 +77,7 @@ export default class CitationTree extends React.Component {
             .join('&');
 
         //  let url = `/view/${param.searchTitle}/${param.page}/${param.pageSize}`;
-        fetch("/tree?" + new URLSearchParams(param))
+        fetch("/graph?" + new URLSearchParams(param))
             .then(response => response.json()).then(({message}) => {
             this.setState({tutorials: message});
         }).then(data => console.log(data))
@@ -133,8 +145,8 @@ export default class CitationTree extends React.Component {
                         </select>
 
                 </div>
-                      <div id="treeWrapper"
-                           style={{width: '500em', height: '200em'}}><BinaryT
+                      <div id="Graph"
+                           style={{width: '500em', height: '200em'}}><Grafo
                           data={tutorials}
                       /></div>
             </span>
