@@ -1,9 +1,10 @@
 package com.fazio.bib.Service;
 
 import com.fazio.bib.entity.GoogleScholar;
-import javafx.util.Pair;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
@@ -24,24 +25,25 @@ public class ScrapingGoogleScholar {
 
         System.setProperty("webdriver.gecko.driver", "src/main/resources/geckodriver.exe");
         FirefoxOptions options = new FirefoxOptions();
-        //options.addArguments("--disable-gpu", "--window-size=1920,1200", "--ignore-certificate-errors", "--headless", "--disable-infobars", "--disable-extensions");
         options.addArguments("--window-size=1920,1200", "--ignore-certificate-errors", "--disable-extensions");
-
         driver = new FirefoxDriver(options);
-        driver.navigate().to("https://scholar.google.com/");
-        driver.manage().window().fullscreen();
+        driver.manage().window().setPosition(new Point(0, 0));
+        driver.manage().window().setSize(new Dimension(1920 / 2, 1200));
+        driver.get("https://scholar.google.com/");
 
         Thread.sleep(2000);
 
     }
 
-    public void SetTitle(String Title) {
+    public void SetTitle(String Title) throws InterruptedException {
+        Thread.sleep(2000);
         driver.findElement(By.xpath("//*[@id=\"gs_hdr_tsi\"]")).sendKeys(Title);
         driver.findElement(By.xpath("//*[@id=\"gs_hdr_tsb\"]/span/span[1]")).click();
     }
 
 
-    public GoogleScholar FirstResult() {
+    public GoogleScholar FirstResult() throws InterruptedException {
+        Thread.sleep(2000);
         String t1 = driver.findElement(By.xpath("/html/body/div/div[10]/div[2]/div[2]/div[2]/div[1]/div[2]/h3/a")).getText();
         String a1 = driver.findElement(By.xpath("/html/body/div/div[10]/div[2]/div[2]/div[2]/div[1]/div[2]/div[1]")).getText();
         String i1 = driver.findElement(By.xpath("/html/body/div/div[10]/div[2]/div[2]/div[2]/div[1]/div[2]/div[2]")).getText();
@@ -49,15 +51,15 @@ public class ScrapingGoogleScholar {
     }
 
 
-    public GoogleScholar SecondResult() {
-
+    public GoogleScholar SecondResult() throws InterruptedException {
+        Thread.sleep(2000);
         String t2 = driver.findElement(By.xpath("/html/body/div/div[10]/div[2]/div[2]/div[2]/div[3]/div[2]/h3/a")).getText();
         String a2 = driver.findElement(By.xpath("/html/body/div/div[10]/div[2]/div[2]/div[2]/div[3]/div[2]/div[1]")).getText();
         String i2 = driver.findElement(By.xpath("/html/body/div/div[10]/div[2]/div[2]/div[2]/div[3]/div[2]/div[2]")).getText();
         return new GoogleScholar(t2, a2, i2);
     }
 
-    public void Graph(int profondita) {
+    public void Graph(int profondita) throws InterruptedException {
         int cont = 0;
         while (profondita != cont) {
             GoogleScholar gs1 = FirstResult();
@@ -95,8 +97,8 @@ public class ScrapingGoogleScholar {
         return false;
     }
 
-    public void Root() {
-
+    public void Root() throws InterruptedException {
+        Thread.sleep(2000);
         String t = driver.findElement(By.xpath("/html/body/div/div[10]/div[2]/div[2]/div[2]/div[1]/div[2]/h3/a")).getText();
         String a = driver.findElement(By.xpath("/html/body/div/div[10]/div[2]/div[2]/div[2]/div[1]/div[2]/div[1]")).getText();
         String i = driver.findElement(By.xpath("/html/body/div/div[10]/div[2]/div[2]/div[2]/div[1]/div[2]/div[2]")).getText();
@@ -127,15 +129,20 @@ public class ScrapingGoogleScholar {
     }
 
 
-    public Pair<ArrayList<Nodes>, ArrayList<Links>> Scraping(int profondita, String title) {
+    public void Scraping(int profondita, String title) throws InterruptedException {
 
         this.SetTitle(title);
         this.Root();
         this.Graph(profondita);
         driver.close();
-        Pair<ArrayList<Nodes>, ArrayList<Links>> response = new Pair<>(nodes, links);
+    }
 
-        return response;
+    public ArrayList<Nodes> GetNodes() {
+        return nodes;
+    }
+
+    public ArrayList<Links> GetLinks() {
+        return links;
     }
 
 
