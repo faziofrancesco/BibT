@@ -1,6 +1,7 @@
 import React from "react";
 import "citation-js";
 import Grafo from "./Grafo";
+import "./CitationTree.css"
 
 export default class CitationTree extends React.Component {
     constructor(props) {
@@ -29,7 +30,7 @@ export default class CitationTree extends React.Component {
 
             },
             searchAuthor: "",
-            profondita: 3
+            profondita: 6
         };
         this.profonditas = [3, 6, 9];
     }
@@ -64,7 +65,7 @@ export default class CitationTree extends React.Component {
     }
 
     retrieveTutorials() {
-
+        console.log(this.state.tutorials)
         const {searchAuthor, profondita} = this.state;
         const params = this.getRequestParams(searchAuthor, profondita);
         let param = {
@@ -78,9 +79,10 @@ export default class CitationTree extends React.Component {
 
         //  let url = `/view/${param.searchTitle}/${param.page}/${param.pageSize}`;
         fetch("/graph?" + new URLSearchParams(param))
-            .then(response => response.json()).then(({message}) => {
-            this.setState({tutorials: message});
-        }).then(data => console.log(data))
+            .then(response => response.json())
+            .then((tutorials) => {
+                this.setState({tutorials: tutorials})
+            }).then()
             .catch((e) => {
                 console.log(e);
             });
@@ -145,10 +147,9 @@ export default class CitationTree extends React.Component {
                         </select>
 
                 </div>
-                      <div id="Graph"
-                           style={{width: '500em', height: '200em'}}><Grafo
-                          data={tutorials}
-                      /></div>
+                      <div id="Graph" style={{width: '500em', height: '200em'}}>
+                          <Grafo data={tutorials}/>
+                      </div>
             </span>
         );
     }

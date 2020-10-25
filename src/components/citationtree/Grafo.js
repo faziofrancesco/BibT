@@ -8,7 +8,7 @@ export default function Grafo({data}) {
         nodeHighlightBehavior: true,
         node: {
             color: "lightgreen",
-            size: 120,
+            size: 500,
             highlightStrokeColor: "blue"
         },
         link: {
@@ -21,15 +21,23 @@ export default function Grafo({data}) {
             return item.id === nodeId;
         });
         selectNode.forEach((item) => {
-            window.alert(item.title)
+            alert("  titolo:" + item.title + "  autore:" + item.author + "  intro:" + item.intro)
         });
+
     };
 
     return (
-        <Graph
-            id="graph-id" // id is mandatory, if no id is defined rd3g will throw an error
-            data={data}
-            config={myConfig}
-            onDoubleClickNode={onDoubleClickNode}
-        />);
+        <div>
+
+            {data &&
+            <Graph
+                id="graph-id" // id is mandatory, if no id is defined rd3g will throw an error
+                data={data}
+                config={myConfig}
+                onDoubleClickNode={onDoubleClickNode}
+            />}
+            {!data && <span>ciao</span>}
+        </div>
+
+    );
 }
