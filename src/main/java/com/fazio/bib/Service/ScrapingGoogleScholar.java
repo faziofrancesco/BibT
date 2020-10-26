@@ -2,10 +2,7 @@ package com.fazio.bib.Service;
 
 import com.fazio.bib.entity.GoogleScholar;
 import lombok.extern.slf4j.Slf4j;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.Point;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 
@@ -44,45 +41,78 @@ public class ScrapingGoogleScholar {
 
     public GoogleScholar FirstResult() throws InterruptedException {
         Thread.sleep(2000);
-        String t1 = driver.findElement(By.xpath("/html/body/div/div[10]/div[2]/div[2]/div[2]/div[1]/div[2]/h3/a")).getText();
-        String a1 = driver.findElement(By.xpath("/html/body/div/div[10]/div[2]/div[2]/div[2]/div[1]/div[2]/div[1]")).getText();
-        String i1 = driver.findElement(By.xpath("/html/body/div/div[10]/div[2]/div[2]/div[2]/div[1]/div[2]/div[2]")).getText();
-        return new GoogleScholar(t1, a1, i1);
+        String titolo1 = driver.findElement(By.xpath("//div[@data-rp='0']/div[@class='gs_ri']/h3/a")).getText();
+        //secondo me non funziona
+        String autori1 = driver.findElement(By.xpath("//div[@data-rp='0']/div[@class='gs_ri']/div[@class='gs_a']")).getText();
+        String riassunto1 = null;
+        if (driver.findElements(By.xpath("//div[@data-rp='0']/div[@class='gs_ri']/div[@class='gs_rs']")).size() != 0) {
+            //Potrebbe non funzionare
+            riassunto1 = driver.findElement(By.xpath("//div[@data-rp='0']/div[@class='gs_ri']/div[@class='gs_rs']")).getText();
+        }
+
+        return new GoogleScholar(titolo1, autori1, riassunto1);
+
     }
 
 
     public GoogleScholar SecondResult() throws InterruptedException {
         Thread.sleep(2000);
-        String t2 = driver.findElement(By.xpath("/html/body/div/div[10]/div[2]/div[2]/div[2]/div[3]/div[2]/h3/a")).getText();
-        String a2 = driver.findElement(By.xpath("/html/body/div/div[10]/div[2]/div[2]/div[2]/div[3]/div[2]/div[1]")).getText();
-        String i2 = driver.findElement(By.xpath("/html/body/div/div[10]/div[2]/div[2]/div[2]/div[3]/div[2]/div[2]")).getText();
-        return new GoogleScholar(t2, a2, i2);
+        if (driver.findElements(By.xpath("//div[@data-rp='1']")).size() == 0) {
+            return null;
+        }
+        WebElement test1 = driver.findElement(By.xpath("//div[@data-rp='1']"));
+
+        String titolo2 = driver.findElement(By.xpath("//div[@data-rp='1']/div[@class='gs_ri']/h3/a")).getText();
+        String autori2 = driver.findElement(By.xpath("//div[@data-rp='1']/div[@class='gs_ri']/div[@class='gs_a']")).getText();
+        String riassunto2 = null;
+        if (driver.findElements(By.xpath("//div[@data-rp='1']/div[@class='gs_ri']/div[@class='gs_rs']")).size() != 0) {
+            riassunto2 = driver.findElement(By.xpath("//div[@data-rp='1']/div[@class='gs_ri']/div[@class='gs_rs']")).getText();
+        }
+        return new GoogleScholar(titolo2, autori2, riassunto2);
     }
 
     public void Graph(int profondita) throws InterruptedException {
         int cont = 0;
         while (profondita != cont) {
+
             GoogleScholar gs1 = FirstResult();
             GoogleScholar gs2 = SecondResult();
+            int id2;
             int id1 = AssignId(gs1.getTitle());
-            int id2 = AssignId(gs2.getTitle());
+            if (gs2 == null) {
+                id2 = 0;
+            } else {
+                id2 = AssignId(gs2.getTitle());
+            }
             Nodes node1 = new Nodes(Integer.toString(id1), gs1.getTitle(), gs1.getAuthors(), gs1.getIntroduction());
-            Nodes node2 = new Nodes(Integer.toString(id2), gs2.getTitle(), gs2.getAuthors(), gs2.getIntroduction());
+            Nodes node2 = null;
+            if (id2 != 0) {
+                node2 = new Nodes(Integer.toString(id2), gs2.getTitle(), gs2.getAuthors(), gs2.getIntroduction());
+            }
+            Links link2 = null;
             Links link1 = new Links(Integer.toString(prec), Integer.toString(id1));
-            Links link2 = new Links(Integer.toString(prec), Integer.toString(id2));
+            if (id2 != 0)
+                link2 = new Links(Integer.toString(prec), Integer.toString(id2));
             prec = id1;
             if (IdExists(id1) == false) {
                 nodes.add(node1);
             }
-            if (IdExists(id2) == false) {
+            if (IdExists(id2) == false && id2 != 0) {
                 nodes.add(node2);
             }
             links.add(link1);
-            links.add(link2);
-            driver.findElement(By.xpath("/html/body/div/div[10]/div[2]/div[2]/div[2]/div[1]/div[2]/div[3]/a[3]")).click();
+            if (link2 != null)
+                links.add(link2);
+            if (driver.findElement(By.xpath("//*[@id=\"gs_res_ccl_mid\"]/div[4]/div/div[3]/a[3]")).getText().equals("")) {
+                driver.close();
+                return;
+            }
+            WebElement firstCitation = driver.findElement(By.xpath("//div[@data-rp='0']"));
+            firstCitation.findElement(By.xpath("//div[@class='gs_ri']/div[@class='gs_fl']/a[3]")).click();
             cont++;
 
         }
+        driver.close();
 
     }
 
@@ -98,17 +128,31 @@ public class ScrapingGoogleScholar {
     }
 
     public void Root() throws InterruptedException {
+
         Thread.sleep(2000);
-        String t = driver.findElement(By.xpath("/html/body/div/div[10]/div[2]/div[2]/div[2]/div[1]/div[2]/h3/a")).getText();
-        String a = driver.findElement(By.xpath("/html/body/div/div[10]/div[2]/div[2]/div[2]/div[1]/div[2]/div[1]")).getText();
-        String i = driver.findElement(By.xpath("/html/body/div/div[10]/div[2]/div[2]/div[2]/div[1]/div[2]/div[2]")).getText();
-        int id = AssignId(t);
-        Nodes node = new Nodes(Integer.toString(id), t, a, i);
+
+        //Se la ricerca è vuota
+        if (driver.findElements(By.xpath("//div[@data-rp='0']")).size() == 0) {
+            driver.close();
+            return;
+        }
+
+        String titolo = driver.findElement(By.xpath("//div[@data-rp='0']/div[@class='gs_ri']/h3/a")).getText();
+        ;
+        String autori = driver.findElement(By.xpath("//div[@data-rp='0']/div[@class='gs_ri']/div[@class='gs_a']")).getText();
+        String riassunto = null;
+        if (driver.findElements(By.xpath("//div[@data-rp='0']/div[@class='gs_ri']/div[@class='gs_rs']")).size() != 0) {
+            riassunto = driver.findElement(By.xpath("//div[@data-rp='0']/div[@class='gs_ri']/div[@class='gs_rs']")).getText();
+        }
+
+        int id = AssignId(titolo);
+        Nodes node = new Nodes(Integer.toString(id), titolo, autori, riassunto);
         prec = id;
         nodes.add(node);
         ids.add(id);
 
-        driver.findElement(By.xpath("/html/body/div/div[10]/div[2]/div[2]/div[2]/div[1]/div[2]/div[3]/a[3]")).click();
+        WebElement firstCitation = driver.findElement(By.xpath("//div[@data-rp='0']"));
+        firstCitation.findElement(By.xpath("//div[@class='gs_ri']/div[@class='gs_fl']/a[3]")).click();
 
     }
 
@@ -134,7 +178,7 @@ public class ScrapingGoogleScholar {
         this.SetTitle(title);
         this.Root();
         this.Graph(profondita);
-        driver.close();
+
     }
 
     public ArrayList<Nodes> GetNodes() {
