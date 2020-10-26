@@ -1,7 +1,6 @@
 import React from "react";
 import "citation-js";
 import Grafo from "./Grafo";
-import "./CitationTree.css"
 
 export default class CitationTree extends React.Component {
     constructor(props) {
@@ -30,9 +29,9 @@ export default class CitationTree extends React.Component {
 
             },
             searchAuthor: "",
-            profondita: 6
+            profondita: 20
         };
-        this.profonditas = [3, 6, 9];
+        this.profonditas = [3, 6, 9, 20];
     }
 
     componentDidMount() {
@@ -116,7 +115,7 @@ export default class CitationTree extends React.Component {
                             <input
                                 type="text"
                                 className="form-control"
-                                placeholder="Search by Author"
+                                placeholder="Search"
                                 value={searchAuthor}
                                 onChange={this.onChangeSearchAuthor}
                                 autoComplete
