@@ -4,27 +4,21 @@ import "./CitationTree.css"
 
 
 export default function Grafo({data}) {
-    var modal = false;
     const myConfig = {
         nodeHighlightBehavior: true,
         node: {
             color: "orange",
-            size: 700,
+            size: 200,
             highlightStrokeColor: "blue"
         },
         link: {
             highlightColor: "lightblue"
-        }
+        },
+        width: "500",
+        height: "500"
+
     };
-    const modalOpen = function () {
 
-        modal = true;
-    }
-
-    const modalClose = function () {
-
-        modal = false;
-    }
     const onDoubleClickNode = function (nodeId) {
 
         let selectNode = data.nodes.filter((item) => {
@@ -42,14 +36,13 @@ export default function Grafo({data}) {
     return (
         <div>
 
-            {data &&
+            {data.nodes.length != 0 &&
             <Graph
                 id="graph-id" // id is mandatory, if no id is defined rd3g will throw an error
                 data={data}
                 config={myConfig}
                 onDoubleClickNode={onDoubleClickNode}
             />}
-            {!data && <span>Errore Generico</span>}
         </div>
 
     );

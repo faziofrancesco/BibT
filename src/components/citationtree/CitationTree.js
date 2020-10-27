@@ -11,31 +11,19 @@ export default class CitationTree extends React.Component {
         this.onChangeProfondita = this.onChangeProfondita.bind(this);
         this.state = {
             tutorials: {
-                links: [
-                    {source: "1", target: "2"},
-                    {source: "2", target: "3"},
-                ],
-                nodes: [{
-                    title: "ciao1", id: "1",
-                    author: "ciao1",
-                    intro: "ciao1"
-                }, {
-                    title: "ciao1"
-                    ,
-                    id: "2",
-                    author: "ciao1",
-                    intro: "ciao1"
-                }, {title: "ciao3", id: "3", author: "ciao3", intro: "ciao3"}],
+                links: [],
+                nodes: [],
 
             },
             searchAuthor: "",
-            profondita: 20
+            profondita: 3
         };
-        this.profonditas = [3, 6, 9, 20];
+        this.profonditas = [3, 6, 9, 12, 15, 18, 21, 23, 25];
     }
 
     componentDidMount() {
-        this.retrieveTutorials();
+        if (this.state.tutorials.nodes.length != 0)
+            this.retrieveTutorials();
     }
 
 
@@ -88,14 +76,12 @@ export default class CitationTree extends React.Component {
     }
 
 
-    onChangeProfondita(event, value) {
+    onChangeProfondita(e) {
+        const profondita = e.target.value;
         this.setState(
             {
-                profondita: value,
+                profondita: profondita,
             },
-            () => {
-                this.retrieveTutorials();
-            }
         );
     }
 
@@ -146,9 +132,12 @@ export default class CitationTree extends React.Component {
                         </select>
 
                 </div>
-                      <div id="Graph" style={{width: '500em', height: '200em'}}>
-                          <Grafo data={tutorials}/>
-                      </div>
+                {tutorials.nodes.length != 0 &&
+                <div id="Graph"
+                     style={{border: "3px solid blue"}}>
+                    <Grafo data={tutorials}/>
+                </div>}
+                {tutorials.nodes.length == 0 && <span>Non esiste il grafo delle citazioni per la parola cercata</span>}
             </span>
         );
     }
