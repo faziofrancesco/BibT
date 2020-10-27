@@ -16,6 +16,7 @@ public class ScrapingGoogleScholar {
     private ArrayList<String> titles = new ArrayList<>();
     private int prec;
     private ArrayList<Integer> ids = new ArrayList<>();
+    private boolean closeRoot = false;
 
     public ScrapingGoogleScholar() throws InterruptedException {
 
@@ -41,7 +42,8 @@ public class ScrapingGoogleScholar {
 
     public GoogleScholar FirstResult() throws InterruptedException {
         Thread.sleep(2000);
-        String titolo1 = driver.findElement(By.xpath("//div[@data-rp='0']/div[@class='gs_ri']/h3/a")).getText();
+
+        String titolo1 = driver.findElement(By.xpath("//div[@data-rp='0']/div[@class='gs_ri']/h3")).getText();
         //secondo me non funziona
         String autori1 = driver.findElement(By.xpath("//div[@data-rp='0']/div[@class='gs_ri']/div[@class='gs_a']")).getText();
         String riassunto1 = null;
@@ -57,12 +59,13 @@ public class ScrapingGoogleScholar {
 
     public GoogleScholar SecondResult() throws InterruptedException {
         Thread.sleep(2000);
+
         if (driver.findElements(By.xpath("//div[@data-rp='1']")).size() == 0) {
             return null;
         }
         WebElement test1 = driver.findElement(By.xpath("//div[@data-rp='1']"));
 
-        String titolo2 = driver.findElement(By.xpath("//div[@data-rp='1']/div[@class='gs_ri']/h3/a")).getText();
+        String titolo2 = driver.findElement(By.xpath("//div[@data-rp='1']/div[@class='gs_ri']/h3")).getText();
         String autori2 = driver.findElement(By.xpath("//div[@data-rp='1']/div[@class='gs_ri']/div[@class='gs_a']")).getText();
         String riassunto2 = null;
         if (driver.findElements(By.xpath("//div[@data-rp='1']/div[@class='gs_ri']/div[@class='gs_rs']")).size() != 0) {
@@ -103,12 +106,11 @@ public class ScrapingGoogleScholar {
             links.add(link1);
             if (link2 != null)
                 links.add(link2);
-            if (driver.findElement(By.xpath("//*[@id=\"gs_res_ccl_mid\"]/div[4]/div/div[3]/a[3]")).getText().equals("")) {
+            if (driver.findElement(By.xpath("//div[@data-rp='0']/div[@class='gs_ri']/div[@class='gs_fl']/a[3]")).getText().contains("Citato") == false) {
                 driver.close();
                 return;
             }
-            WebElement firstCitation = driver.findElement(By.xpath("//div[@data-rp='0']"));
-            firstCitation.findElement(By.xpath("//div[@class='gs_ri']/div[@class='gs_fl']/a[3]")).click();
+            driver.findElement(By.xpath("//div[@data-rp='0']/div[@class='gs_ri']/div[@class='gs_fl']/a[3]")).click();
             cont++;
 
         }
@@ -133,11 +135,12 @@ public class ScrapingGoogleScholar {
 
         //Se la ricerca è vuota
         if (driver.findElements(By.xpath("//div[@data-rp='0']")).size() == 0) {
+            closeRoot = true;
             driver.close();
             return;
         }
 
-        String titolo = driver.findElement(By.xpath("//div[@data-rp='0']/div[@class='gs_ri']/h3/a")).getText();
+        String titolo = driver.findElement(By.xpath("//div[@data-rp='0']/div[@class='gs_ri']/h3")).getText();
         ;
         String autori = driver.findElement(By.xpath("//div[@data-rp='0']/div[@class='gs_ri']/div[@class='gs_a']")).getText();
         String riassunto = null;
@@ -177,7 +180,8 @@ public class ScrapingGoogleScholar {
 
         this.SetTitle(title);
         this.Root();
-        this.Graph(profondita);
+        if (closeRoot != true)
+            this.Graph(profondita);
 
     }
 

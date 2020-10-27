@@ -21,20 +21,20 @@ public class CitationGraph {
     public ResponseEntity<Map<String, Object>> viewGraph(
 
             @RequestParam(required = true, name = "author", defaultValue = "cauteruccio") String title,
-            @RequestParam(name = "profondita", defaultValue = "6") int profondita) {
+            @RequestParam(name = "profondita", defaultValue = "2") int profondita) {
         try {
             ScrapingGoogleScholar s = new ScrapingGoogleScholar();
             // message = s.Scraping(profondita, title);
             s.Scraping(profondita, title);
-            ArrayList<Nodes> nodes = new ArrayList<>();
+            ArrayList<Nodes> nodes;
             nodes = s.GetNodes();
-            ArrayList<Links> links = new ArrayList<>();
+            ArrayList<Links> links;
             links = s.GetLinks();
+
             Map<String, Object> response = new HashMap<>();
             response.put("nodes", nodes);
             response.put("links", links);
             log.error(response.toString());
-
 
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
