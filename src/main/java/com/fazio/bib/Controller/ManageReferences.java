@@ -1,5 +1,6 @@
 package com.fazio.bib.Controller;
 
+import com.fazio.bib.Service.AddBib;
 import com.fazio.bib.entity.*;
 import com.fazio.bib.repository.ArticleRepository;
 import com.fazio.bib.repository.BookRepository;
@@ -48,6 +49,23 @@ public class ManageReferences {
         return citation;
     }
 
+    @GetMapping(value = "/searchBib")
+    public ResponseEntity<Map<String, Object>> GetBib(
+            @RequestParam(name = "title", defaultValue = "ciao") String title) {
+        try {
+            AddBib add = new AddBib();
+            add.setTitle(title);
+            String bib = add.GetText();
+            add.Close();
+            Map<String, Object> response = new HashMap<>();
+            response.put("bib", bib);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        }
+    }
+
     @GetMapping(value = "/vie")
     public ArrayList<Citation> viewReference() {
 
@@ -60,6 +78,51 @@ public class ManageReferences {
             System.out.println(c.get(i));
         }
         return c;
+    }
+
+    @GetMapping(value = "/deleteAllCitation")
+    public void deleteAllCitation() {
+        repository.deleteAll();
+        rep.deleteAll();
+        miscRepository.deleteAll();
+        articleRepository.deleteAll();
+    }
+
+    @GetMapping(value = "/deleteCitation")
+    public void deleteCitation(
+            @RequestParam(name = "id", defaultValue = "1") int id,
+            @RequestParam(value = "name", defaultValue = "article") String type
+    ) {
+        System.out.println("sono entrato");
+        if (type.equals("book")) {
+            repository.deleteById(id);
+        }
+        if (type.equals("article")) {
+            articleRepository.deleteById(id);
+        }
+        if (type.equals("misc")) {
+            miscRepository.deleteById(id);
+        }
+        if (type.equals("inproceedings")) {
+            rep.deleteById(id);
+        }
+    }
+
+    @GetMapping(value = "AllCitation")
+    public ResponseEntity<Map<String, Object>> AllCitation() {
+        try {
+            ArrayList<Citation> c = new ArrayList<Citation>();
+            c.addAll((Collection<? extends Citation>) miscRepository.findAll());
+            c.addAll((Collection<? extends Citation>) repository.findAll());
+            c.addAll((Collection<? extends Citation>) rep.findAll());
+            c.addAll((Collection<? extends Citation>) articleRepository.findAll());
+            Map<String, Object> response = new HashMap<>();
+            response.put("citation", c);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping(value = "/view")

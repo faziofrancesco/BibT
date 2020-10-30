@@ -6,5 +6,6 @@ import org.springframework.data.repository.CrudRepository;
 public interface MiscRepository extends CrudRepository<Misc, Integer> {
     Iterable<Misc> findByTitle(String title);
 
+    void deleteById(int id);
 
 }

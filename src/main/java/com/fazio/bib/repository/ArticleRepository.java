@@ -7,5 +7,6 @@ public interface ArticleRepository extends CrudRepository<Article, Integer> {
 
     Iterable<Article> findByTitle(String title);
 
+    void deleteById(int id);
 
 }

@@ -8,5 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface BookRepository extends CrudRepository<Book, Integer> {
     Iterable<Book> findByTitle(String title);
 
+    void deleteById(int id);
 
 }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 public interface InproceedingsRepository extends CrudRepository<Inproceedings, Integer> {
     Iterable<Inproceedings> findByTitle(String title);
 
+    void deleteById(int id);
 
 }
 
