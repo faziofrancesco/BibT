@@ -1,6 +1,8 @@
 import React from "react";
 import "citation-js";
 import Pagination from "@material-ui/lab/Pagination";
+import Button from "@material-ui/core/Button";
+import jsPDF from 'jspdf'
 
 
 export default class List extends React.Component {
@@ -12,7 +14,8 @@ export default class List extends React.Component {
         this.setActiveTutorial = this.setActiveTutorial.bind(this);
         this.handlePageChange = this.handlePageChange.bind(this);
         this.handlePageSizeChange = this.handlePageSizeChange.bind(this);
-
+        this.deleteCitation = this.deleteCitation.bind(this);
+        this.deleteAllCitation = this.deleteAllCitation.bind(this)
         this.state = {
             tutorials: [],
             currentTutorial: null,
@@ -21,9 +24,12 @@ export default class List extends React.Component {
 
             page: 1,
             count: 0,
-            pageSize: 3,
+            currentTitle: "",
+            currentId: 1,
+            pageSize: 3
         };
-
+        this.t = 0;
+        this.temp = []
         this.pageSizes = [3, 6, 9];
     }
 
@@ -47,11 +53,50 @@ export default class List extends React.Component {
         });
     }
 
+    deleteAllCitation() {
+        fetch("/deleteAllCitation")
+            .then(response => response.json())
+            .catch((e) => {
+                console.log(e);
+            });
+        window.location.reload(false)
+    }
+
+    deleteCitation() {
+        console.log(this.t)
+        let citation = this.t;
+        let id;
+        let name;
+        for (const x in citation) {
+            if (x == 'name') {
+                name = citation[x]
+                console.log(name)
+            }
+            if (x == 'id') {
+                id = citation[x]
+                console.log(id)
+            }
+        }
+        let param1 = {
+            id: id,
+            name: name,
+
+        }
+        fetch("/deleteCitation?" + new URLSearchParams(param1))
+            .then(response => response.json())
+            .catch((e) => {
+                console.log(e);
+            });
+        window.location.reload(false)
+    }
+
     setActiveTutorial(tutorial, index) {
         this.setState({
             currentTutorial: tutorial,
             currentIndex: index,
+
         });
+        this.t = tutorial;
     }
 
     getRequestParams(searchTitle, page, pageSize) {
@@ -95,6 +140,14 @@ export default class List extends React.Component {
             .catch((e) => {
                 console.log(e);
             });
+        fetch("/AllCitation")
+            .then(response => response.json())
+            .then(({citation}) => {
+                this.temp = citation;
+            }).then(data => console.log(data))
+            .catch((e) => {
+                console.log(e);
+            });
     }
 
 
@@ -108,6 +161,7 @@ export default class List extends React.Component {
             }
         );
     }
+
 
     handlePageSizeChange(event) {
         this.setState(
@@ -203,7 +257,10 @@ export default class List extends React.Component {
                             <h4>Citation</h4>
                             {this.Stampa(currentTutorial)}
 
-
+                            <Button onClick={this.deleteCitation}>Delete Citation</Button>
+                            <Button onClick={this.deleteAllCitation}>Delete All Citation</Button>
+                            <Button onClick={this.generatePDF} type="primary">Export</Button>
+                            <Button onClick={this.generateAllPDF} type="primary">Export All</Button>
                         </div>
                     ) : (
                         <div>
@@ -245,6 +302,42 @@ export default class List extends React.Component {
         return v;
     }
 
+    generatePDF = () => {
+        var doc = new jsPDF('p', 'pt');
+        let citation = this.t
+        let v = 20;
+        for (const x in citation) {
+            doc.text(50, v, x + ":" + citation[x])
+            v += 20;
+        }
 
+
+        doc.setFont('helvetica')
+        doc.save('demo.pdf')
+    }
+    generateAllPDF = () => {
+        var doc = new jsPDF('p', 'pt');
+        let citazioni = this.temp;
+        let v = 20;
+        var c = 0;
+        for (const x of citazioni) {
+            let citation = x;
+            c += 1;
+            if (c > 4) {
+                doc.addPage();
+                c = 0;
+                v = 20;
+            }
+            for (const y in citation) {
+                doc.text(50, v, y + ":" + citation[y])
+                v += 20;
+            }
+            v += 20;
+            doc.text(50, v, "              ")
+            doc.text(50, v + 20, "              ")
+        }
+        doc.setFont('helvetica')
+        doc.save('demo.pdf')
+    }
 }
 

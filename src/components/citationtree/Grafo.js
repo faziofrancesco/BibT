@@ -1,9 +1,8 @@
 import React from "react";
 import {Graph} from "react-d3-graph";
-import "./CitationTree.css"
 
 
-export default function Grafo({data}) {
+export default function Grafo({data, attr}) {
     const myConfig = {
         nodeHighlightBehavior: true,
         node: {
@@ -25,13 +24,15 @@ export default function Grafo({data}) {
             return item.id === nodeId;
         });
         selectNode.forEach((item) => {
-
-            window.alert("title:" + item.title + "" +
-                "author:" + item.author + "" +
-                "" + "intro" + item.intro)
+            let attr1 = [item.id, item.title, item.author, item.intro];
+            //  window.alert("title:" + item.title + "" +
+            //    "author:" + item.author + "" +
+            //  "" + "intro" + item.intro)
+            attr(attr1);
         });
 
     };
+
 
     return (
         <div>
