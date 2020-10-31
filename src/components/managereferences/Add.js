@@ -3,7 +3,7 @@ import React from "react";
 export default class Add extends React.Component {
     constructor(props) {
         super(props);
-        
+
 
     }
 
@@ -17,25 +17,27 @@ export default class Add extends React.Component {
             var bibtexParse = require('bibtex-parse-js');
 
             var sample = bibtexParse.toJSON(text);
-            sample[0].entryTags["@type"] = sample[0].entryType
+            var cont = 0;
+            while (cont != sample.length) {
+                sample[cont].entryTags["@type"] = sample[cont].entryType
 
 
-            fetch('/prova', {
-                method: 'POST', // or 'PUT'
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(sample[0].entryTags),
-            })
-                .then(response => response.json())
-                .then(dati => {
-                    console.log('Success:', dati);
+                fetch('/prova', {
+                    method: 'POST', // or 'PUT'
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(sample[cont].entryTags),
                 })
-                .catch((error) => {
-                    console.error('Error:', error);
-                });
-
-
+                    .then(response => response.json())
+                    .then(dati => {
+                        console.log('Success:', dati);
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+                cont += 1
+            }
         };
         reader.readAsText(input.files[0]);
     };
