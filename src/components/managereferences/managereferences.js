@@ -28,7 +28,6 @@ export default function Manage(props) {
 
                     <Link to={`${url}/list`}>List</Link>
                     <button onClick={() => setstato(true)}>Add</button>
-                    <Link to={`${url}/Export`}>Export</Link>
                 </Nav>}
                 {stato && <Nav className="<col>">
                     <Link to={`${url}/article`}>Article</Link>
@@ -65,7 +64,7 @@ export default function Manage(props) {
                     <Route exact path={`${path}/list`}>
                         <List/>
                     </Route>
-                    
+
                 </Switch>
             </div>
 

@@ -1,8 +1,9 @@
 import React from "react";
 import "citation-js";
 import Pagination from "@material-ui/lab/Pagination";
-import Button from "@material-ui/core/Button";
 import jsPDF from 'jspdf'
+import DropdownButton from "react-bootstrap/DropdownButton";
+import DropdownItem from "react-bootstrap/DropdownItem";
 
 
 export default class List extends React.Component {
@@ -256,11 +257,24 @@ export default class List extends React.Component {
                         <div>
                             <h4>Citation</h4>
                             {this.Stampa(currentTutorial)}
-
-                            <Button onClick={this.deleteCitation}>Delete Citation</Button>
-                            <Button onClick={this.deleteAllCitation}>Delete All Citation</Button>
-                            <Button onClick={this.generatePDF} type="primary">Export</Button>
-                            <Button onClick={this.generateAllPDF} type="primary">Export All</Button>
+                            <DropdownButton drop={"right"} id="dropdown-basic-button" title="Delete" split
+                                            variant="danger">
+                                <DropdownItem onClick={this.deleteCitation}>Delete
+                                    Citation</DropdownItem>
+                                <DropdownItem onClick={this.deleteAllCitation}>Delete All
+                                    Citation</DropdownItem>
+                            </DropdownButton>
+                            &ensp;
+                            <DropdownButton drop={"right"} id="dropdown-basic-button1" title="Export"
+                                            split
+                                            variant="success">
+                                <DropdownItem onClick={this.generatePDF}>Export
+                                    PDF</DropdownItem>
+                                <DropdownItem onClick={this.generateAllPDF}>Export All
+                                    PDF</DropdownItem>
+                                <DropdownItem onClick={this.downloadTxtFile}>Export
+                                    Txt</DropdownItem>
+                            </DropdownButton>
                         </div>
                     ) : (
                         <div>
@@ -290,29 +304,35 @@ export default class List extends React.Component {
     generatemplate(citation) {
         let v = [];
         for (const x in citation) {
-            v.push(
-                <div>
-                    <label>
-                        <strong>{x}:</strong>
-                    </label>{" "}
-                    {citation[x]}
-                </div>
-            )
+            if (citation[x] != null && x != "id") {
+                v.push(
+                    <div>
+                        <label>
+                            <strong>{x}:</strong>
+                        </label>{" "}
+                        {citation[x]}
+                    </div>
+                )
+            }
         }
         return v;
     }
 
     generatePDF = () => {
         var doc = new jsPDF('p', 'pt');
+        doc.setFontSize(5);
+        doc.setFont("helvetica");
+        doc.setTextColor(0, 0, 255);
         let citation = this.t
         let v = 20;
         for (const x in citation) {
-            doc.text(50, v, x + ":" + citation[x])
-            v += 20;
+            if (citation[x] != null && x != "id") {
+                doc.text(0, v, x + ":" + citation[x])
+                v += 20;
+            }
         }
 
 
-        doc.setFont('helvetica')
         doc.save('demo.pdf')
     }
     generateAllPDF = () => {
@@ -320,6 +340,9 @@ export default class List extends React.Component {
         let citazioni = this.temp;
         let v = 20;
         var c = 0;
+        doc.setFontSize(5);
+        doc.setFont("helvetica");
+        doc.setTextColor(0, 0, 255);
         for (const x of citazioni) {
             let citation = x;
             c += 1;
@@ -329,8 +352,10 @@ export default class List extends React.Component {
                 v = 20;
             }
             for (const y in citation) {
-                doc.text(50, v, y + ":" + citation[y])
-                v += 20;
+                if (citation[y] != null) {
+                    doc.text(100, v, y + ":" + citation[y])
+                    v += 20;
+                }
             }
             v += 20;
             doc.text(50, v, "              ")
@@ -339,5 +364,21 @@ export default class List extends React.Component {
         doc.setFont('helvetica')
         doc.save('demo.pdf')
     }
-}
+    downloadTxtFile = () => {
+        const element = document.createElement("a");
+        let citation = this.t
+        let txt = "";
+        for (const x in citation) {
+            if (citation[x] != null && x != "id") {
+                txt += x + ":" + citation[x] + "\n";
+            }
+        }
+        const file = new Blob([txt],
+            {type: 'text/plain;charset=utf-8'});
+        element.href = URL.createObjectURL(file);
+        element.download = "myFile.txt";
+        document.body.appendChild(element);
+        element.click();
+    }
 
+}

@@ -101,7 +101,8 @@ export default class CitationTree extends React.Component {
         const {nodeP} = this.state;
 
         let param = {
-            title: nodeP[1]
+            title: nodeP[1],
+            site: nodeP[4]
         };
         await fetch("/searchBib?" + new URLSearchParams(param))
             .then(response => response.json())
@@ -110,7 +111,7 @@ export default class CitationTree extends React.Component {
                 var bibtexParse = require('bibtex-parse-js');
                 var sample = bibtexParse.toJSON(bib.bib);
                 sample[0].entryTags["@type"] = sample[0].entryType
-
+                console.log(sample[0].entryTags);
                 fetch('/prova', {
                     method: 'POST', // or 'PUT'
                     headers: {
@@ -188,11 +189,16 @@ export default class CitationTree extends React.Component {
                         </Col>
                         <Col>
                             <div>
-                                {nodeP[0] != 0 && <p>{nodeP[0]}</p>}
-                                {nodeP[1] != 0 && <p>{nodeP[1]}</p>}
-                                {nodeP[2] != 0 && <p>{nodeP[2]}</p>}
-                                {nodeP[3] != 0 && <p>{nodeP[3]}</p>}
-                                {nodeP[0] != 0 && <Button onClick={this.AddFile}>
+                                {nodeP[1] != 0 && <p>title: {nodeP[1]}</p>}
+                                {nodeP[2] != 0 && <p>authors: {nodeP[2]}</p>}
+                                {nodeP[3] != 0 && <p>intro: {nodeP[3]}</p>}
+                                {nodeP[4] != 0 &&
+                                <Button style={{backgroundColor: "blue", textAlign: "center"}} href={nodeP[4]}
+                                        target="_blank">site</Button>}
+                                &ensp;
+                                {nodeP[0] != 0 &&
+
+                                <Button style={{backgroundColor: "green", textAlign: "center"}} onClick={this.AddFile}>
                                     Add Bibtext
                                 </Button>}
                             </div>

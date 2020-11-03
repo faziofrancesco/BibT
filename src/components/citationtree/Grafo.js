@@ -24,7 +24,7 @@ export default function Grafo({data, attr}) {
             return item.id === nodeId;
         });
         selectNode.forEach((item) => {
-            let attr1 = [item.id, item.title, item.author, item.intro];
+            let attr1 = [item.id, item.title, item.author, item.intro, item.site];
             //  window.alert("title:" + item.title + "" +
             //    "author:" + item.author + "" +
             //  "" + "intro" + item.intro)
