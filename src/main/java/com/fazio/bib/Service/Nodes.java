@@ -14,4 +14,5 @@ public class Nodes {
     private String title;
     private String author;
     private String intro;
+    private String site;
 }

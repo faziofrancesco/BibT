@@ -41,8 +41,6 @@ public class ScrapingGoogleScholar {
 
 
     public GoogleScholar FirstResult() throws InterruptedException {
-        Thread.sleep(2000);
-
         String titolo1 = driver.findElement(By.xpath("//div[@data-rp='0']/div[@class='gs_ri']/h3")).getText();
         //secondo me non funziona
         String autori1 = driver.findElement(By.xpath("//div[@data-rp='0']/div[@class='gs_ri']/div[@class='gs_a']")).getText();
@@ -58,8 +56,6 @@ public class ScrapingGoogleScholar {
 
 
     public GoogleScholar SecondResult() throws InterruptedException {
-        Thread.sleep(2000);
-
         if (driver.findElements(By.xpath("//div[@data-rp='1']")).size() == 0) {
             return null;
         }
@@ -77,7 +73,8 @@ public class ScrapingGoogleScholar {
     public void Graph(int profondita) throws InterruptedException {
         int cont = 0;
         while (profondita != cont) {
-
+            Thread.sleep(10000);
+            System.out.println(driver.getCurrentUrl());
             GoogleScholar gs1 = FirstResult();
             GoogleScholar gs2 = SecondResult();
             int id2;
@@ -87,10 +84,10 @@ public class ScrapingGoogleScholar {
             } else {
                 id2 = AssignId(gs2.getTitle());
             }
-            Nodes node1 = new Nodes(Integer.toString(id1), gs1.getTitle(), gs1.getAuthors(), gs1.getIntroduction());
+            Nodes node1 = new Nodes(Integer.toString(id1), gs1.getTitle(), gs1.getAuthors(), gs1.getIntroduction(), driver.getCurrentUrl());
             Nodes node2 = null;
             if (id2 != 0) {
-                node2 = new Nodes(Integer.toString(id2), gs2.getTitle(), gs2.getAuthors(), gs2.getIntroduction());
+                node2 = new Nodes(Integer.toString(id2), gs2.getTitle(), gs2.getAuthors(), gs2.getIntroduction(), driver.getCurrentUrl());
             }
             Links link2 = null;
             Links link1 = new Links(Integer.toString(prec), Integer.toString(id1));
@@ -149,7 +146,7 @@ public class ScrapingGoogleScholar {
         }
 
         int id = AssignId(titolo);
-        Nodes node = new Nodes(Integer.toString(id), titolo, autori, riassunto);
+        Nodes node = new Nodes(Integer.toString(id), titolo, autori, riassunto, driver.getCurrentUrl());
         prec = id;
         nodes.add(node);
         ids.add(id);

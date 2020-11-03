@@ -32,30 +32,40 @@ public class ManageReferences {
     public Citation add(@RequestBody Citation citation) {
         if (citation instanceof Misc) {
             Misc m = (Misc) citation;
-            miscRepository.save(m);
+            List<Misc> it = (List<Misc>) miscRepository.findByTitle(m.getTitle());
+            if (it.size() == 0)
+                miscRepository.save(m);
         }
         if (citation instanceof Article) {
             Article c = (Article) citation;
-            articleRepository.save(c);
+            List<Article> it = (List<Article>) articleRepository.findByTitle(c.getTitle());
+            if (it.size() == 0)
+                articleRepository.save(c);
         }
         if (citation instanceof Inproceedings) {
             Inproceedings c = (Inproceedings) citation;
-            rep.save(c);
+            List<Inproceedings> it = (List<Inproceedings>) rep.findByTitle(c.getTitle());
+            if (it.size() == 0)
+                rep.save(c);
         }
         if (citation instanceof Book) {
             Book c = (Book) citation;
-            repository.save(c);
+            List<Book> it = (List<Book>) repository.findByTitle(c.getTitle());
+            if (it.size() == 0)
+                repository.save(c);
         }
         return citation;
     }
 
     @GetMapping(value = "/searchBib")
     public ResponseEntity<Map<String, Object>> GetBib(
-            @RequestParam(name = "title", defaultValue = "ciao") String title) {
+            @RequestParam(name = "title", defaultValue = "ciao") String title,
+            @RequestParam(name = "site", defaultValue = "https://scholar.google.com/schhp?hl=it&as_sdt=0,5")
+                    String site) {
         try {
             AddBib add = new AddBib();
-            add.setTitle(title);
-            String bib = add.GetText();
+            add.setUrl(site);
+            String bib = add.GetText(title);
             add.Close();
             Map<String, Object> response = new HashMap<>();
             response.put("bib", bib);

@@ -24,19 +24,31 @@ public class AddBib {
         Thread.sleep(2000);
     }
 
-    public void setTitle(String title) throws InterruptedException {
-        Thread.sleep(2000);
-        driver.findElement(By.xpath("//*[@id=\"gs_hdr_tsi\"]")).sendKeys(title);
-        driver.findElement(By.xpath("//*[@id=\"gs_hdr_tsb\"]/span/span[1]")).click();
+    public void setUrl(String url) {
+        driver.get(url);
     }
 
-    public String GetText() throws InterruptedException {
-        new WebDriverWait(driver, 100).until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"gs_res_ccl_mid\"]/div/div[2]/div[3]/a[2]")));
-        driver.findElement(By.xpath("//*[@id=\"gs_res_ccl_mid\"]/div/div[2]/div[3]/a[2]")).click();
-        new WebDriverWait(driver, 100).until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/div/div[4]/div/div[2]/div/div[2]/a[1]")));
-        driver.findElement(By.xpath("/html/body/div/div[4]/div/div[2]/div/div[2]/a[1]")).click();
-        Thread.sleep(2000);
-        return driver.findElement(By.xpath("/html/body/pre")).getText();
+    public String GetText(String title) throws InterruptedException {
+        Thread.sleep(10000);
+        //*[@id="gs_res_ccl_mid"]/div[2]/div[2]/div[3]/a[2]
+        if (title.equals(driver.findElement(By.xpath("//div[@data-rp='0']/div[@class='gs_ri']/h3")).getText())) {
+            new WebDriverWait(driver, 100).until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id='gs_res_ccl_mid']/div[2]/div[2]/div[3]/a[2]")));
+            driver.findElement(By.xpath("//*[@id='gs_res_ccl_mid']/div[2]/div[2]/div[3]/a[2]")).click();
+            new WebDriverWait(driver, 100).until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id='gs_citi']/a[1]")));
+            driver.findElement(By.xpath("//*[@id='gs_citi']/a[1]")).click();
+            Thread.sleep(2000);
+            return driver.findElement(By.xpath("/html/body/pre")).getText();
+        }
+        if (title.equals(driver.findElement(By.xpath("//div[@data-rp='1']/div[@class='gs_ri']/h3")).getText())) {
+            Thread.sleep(10000);
+            new WebDriverWait(driver, 100).until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id='gs_res_ccl_mid']/div[3]/div[2]/div[3]/a[2]")));
+            driver.findElement(By.xpath("//*[@id='gs_res_ccl_mid']/div[3]/div[2]/div[3]/a[2]")).click();
+            new WebDriverWait(driver, 100).until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id='gs_citi']/a[1]")));
+            driver.findElement(By.xpath("//*[@id='gs_citi']/a[1]")).click();
+            Thread.sleep(5000);
+            return driver.findElement(By.xpath("/html/body/pre")).getText();
+        }
+        return "0";
     }
 
     public void Close() {
