@@ -27,7 +27,8 @@ export default class List extends React.Component {
             count: 0,
             currentTitle: "",
             currentId: 1,
-            pageSize: 3
+            pageSize: 3,
+            showModal: false
         };
         this.t = 0;
         this.temp = []
@@ -264,17 +265,38 @@ export default class List extends React.Component {
                                 <DropdownItem onClick={this.deleteAllCitation}>Delete All
                                     Citation</DropdownItem>
                             </DropdownButton>
-                            &ensp;
-                            <DropdownButton drop={"right"} id="dropdown-basic-button1" title="Export"
-                                            split
-                                            variant="success">
-                                <DropdownItem onClick={this.generatePDF}>Export
-                                    PDF</DropdownItem>
-                                <DropdownItem onClick={this.generateAllPDF}>Export All
-                                    PDF</DropdownItem>
-                                <DropdownItem onClick={this.downloadTxtFile}>Export
-                                    Txt</DropdownItem>
-                            </DropdownButton>
+
+                            <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#exampleModalCenter">
+                                Export txt
+                            </button>
+
+
+                            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+                                 aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLongTitle">Export</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form>
+                                                <textarea rows="5" cols="60" id="areaEx" name="description"></textarea>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
+                                            </button>
+                                            <button type="button" onClick={this.downloadTxtFile} data-dismiss="modal"
+                                                    class="btn btn-primary">Export
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     ) : (
                         <div>
@@ -366,12 +388,36 @@ export default class List extends React.Component {
     }
     downloadTxtFile = () => {
         const element = document.createElement("a");
-        let citation = this.t
+        let citation = this.t;
+
+        let txt = document.getElementById("areaEx").value;
+        txt = txt.replace('$author', citation['author']);
+        txt = txt.replace('$title', citation['title']);
+        txt = txt.replace('$journal', citation['journal']);
+        txt = txt.replace('$year', citation['year']);
+        console.log(txt);
+        const file = new Blob([txt],
+            {type: 'text/plain;charset=utf-8'});
+        element.href = URL.createObjectURL(file);
+        element.download = "myFile.txt";
+        document.body.appendChild(element);
+        element.click();
+        document.getElementById("areaEx").value = "";
+    }
+
+    generateAllTxt = () => {
+        const element = document.createElement("a");
+        let citazioni = this.temp;
         let txt = "";
-        for (const x in citation) {
-            if (citation[x] != null && x != "id") {
-                txt += x + ":" + citation[x] + "\n";
+        for (const x of citazioni) {
+            let citation = x;
+            for (const y in citation) {
+                if (citation[y] != null && y != "id") {
+                    txt += y + ":" + citation[y] + "\n";
+                }
             }
+            txt += "\n";
+            txt += "\n";
         }
         const file = new Blob([txt],
             {type: 'text/plain;charset=utf-8'});
@@ -380,5 +426,4 @@ export default class List extends React.Component {
         document.body.appendChild(element);
         element.click();
     }
-
 }
