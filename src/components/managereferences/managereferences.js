@@ -1,13 +1,14 @@
 import React, {useState} from "react";
-import Nav from "react-bootstrap/Nav"
 import "citation-js";
-import {Link, Route, Switch, useHistory, useRouteMatch} from "react-router-dom";
+import {Route, Switch, useHistory, useRouteMatch} from "react-router-dom";
 import Add from "./Add";
 import Book from "./book";
 import Article from "./article";
 import Inproceedings from "./inproceedings";
 import Misc from "./misc";
 import List from "./List";
+
+import "./navbar.css"
 
 export default function Manage(props) {
     const [stato, setstato] = useState(false);
@@ -16,34 +17,30 @@ export default function Manage(props) {
     let history = useHistory()
 
     return (
-        <div className={"row"}>
-            <div style={{
-                width: 100,
-                height: 900,
-                borderLeft: 10,
-                backgroundColor: "cornflowerblue",
-                borderStyle: "solid"
-            }}>
-                {!stato && <Nav className="<col>">
 
-                    <Link to={`${url}/list`}>List</Link>
-                    <button onClick={() => setstato(true)}>Add</button>
-                </Nav>}
-                {stato && <Nav className="<col>">
-                    <Link to={`${url}/article`}>Article</Link>
-                    <Link to={`${url}/book`}>Book</Link>
-                    <Link to={`${url}/inproceedings`}>Inproceedings</Link>
-                    <Link to={`${url}/misc`}>Misc</Link>
-                    <Link to={`${url}/add`}>AddFile</Link>
-                    <button placeholder={"return menu"} onClick={() => {
-                        setstato(false);
-                        history.push("/manage");
-                    }}>Return
-                        Menu
-                    </button>
-                </Nav>}
-                }
-            </div>
+        <div className={"row"}>
+
+            {!stato && <div className="vertical-menu">
+                <a href="#" className="active">Manage References</a>
+                <a href={`${url}/list`}>List</a>
+                <a onClick={() => setstato(true)}>Add</a>
+            </div>}
+            {stato && <div className="vertical-menu">
+                <a href="#" className="active">Add Citation</a>
+                <a href={`${url}/article`}>Article</a>
+                <a href={`${url}/book`}>Book</a>
+                <a href={`${url}/inproceedings`}>Inproceedings</a>
+                <a href={`${url}/misc`}>Misc</a>
+                <a href={`${url}/add`}>AddFile</a>
+                <a onClick={() => {
+                    setstato(false);
+                    history.push("/manage");
+                }}>Return
+                    Menu</a>
+            </div>}
+
+            &emsp;
+            &emsp;
             <div className={"col"}>
                 <Switch>
                     <Route exact path={`${path}/add`}>

@@ -1,10 +1,6 @@
 import React from "react";
 import "citation-js";
 import Pagination from "@material-ui/lab/Pagination";
-import jsPDF from 'jspdf'
-import DropdownButton from "react-bootstrap/DropdownButton";
-import DropdownItem from "react-bootstrap/DropdownItem";
-
 
 export default class List extends React.Component {
     constructor(props) {
@@ -189,7 +185,9 @@ export default class List extends React.Component {
         } = this.state;
 
         return (
+
             <div className="list row">
+                
                 <div className="col-md-8">
                     <div className="input-group mb-3">
                         <input
@@ -222,7 +220,20 @@ export default class List extends React.Component {
                                 </option>
                             ))}
                         </select>
-
+                        &emsp;
+                        &emsp;
+                        &emsp;
+                        &emsp;
+                        <button type="button" style={{backgroundColor: "green"}} className="btn btn-primary"
+                                data-toggle="modal"
+                                data-target="#exampleModalCenter1">
+                            Export All
+                        </button>
+                        &emsp;
+                        &emsp;
+                        <button type="button" style={{backgroundColor: "red"}} className="btn btn-primary"
+                                onClick={this.deleteAllCitation}>Delete All
+                        </button>
                         <Pagination
                             className="my-3"
                             count={count}
@@ -233,6 +244,33 @@ export default class List extends React.Component {
                             shape="rounded"
                             onChange={this.handlePageChange}
                         />
+
+
+                        <div className="modal fade" id="exampleModalCenter1" tabIndex="-1" role="dialog"
+                             aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div className="modal-dialog modal-dialog-centered" role="document">
+                                <div className="modal-content">
+                                    <div className="modal-header">
+                                        <h5 className="modal-title" id="exampleModalLongTitle">Export</h5>
+                                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div className="modal-body">
+                                        <form>
+                                            <textarea rows="5" cols="60" id="areaEx1" name="description"></textarea>
+                                        </form>
+                                    </div>
+                                    <div className="modal-footer">
+                                        <button type="button" className="btn btn-secondary" data-dismiss="modal">Close
+                                        </button>
+                                        <button type="button" onClick={this.generateAllTxt} data-dismiss="modal"
+                                                className="btn btn-primary">Export
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <ul className="list-group">
@@ -258,17 +296,16 @@ export default class List extends React.Component {
                         <div>
                             <h4>Citation</h4>
                             {this.Stampa(currentTutorial)}
-                            <DropdownButton drop={"right"} id="dropdown-basic-button" title="Delete" split
-                                            variant="danger">
-                                <DropdownItem onClick={this.deleteCitation}>Delete
-                                    Citation</DropdownItem>
-                                <DropdownItem onClick={this.deleteAllCitation}>Delete All
-                                    Citation</DropdownItem>
-                            </DropdownButton>
 
-                            <button type="button" class="btn btn-primary" data-toggle="modal"
+                            <button type="button" style={{backgroundColor: "red"}} className="btn btn-primary"
+                                    onClick={this.deleteCitation}>Delete
+                            </button>
+                            &emsp;
+                            &emsp;
+                            <button type="button" style={{backgroundColor: "green"}} class="btn btn-primary"
+                                    data-toggle="modal"
                                     data-target="#exampleModalCenter">
-                                Export txt
+                                Export
                             </button>
 
 
@@ -340,52 +377,6 @@ export default class List extends React.Component {
         return v;
     }
 
-    generatePDF = () => {
-        var doc = new jsPDF('p', 'pt');
-        doc.setFontSize(5);
-        doc.setFont("helvetica");
-        doc.setTextColor(0, 0, 255);
-        let citation = this.t
-        let v = 20;
-        for (const x in citation) {
-            if (citation[x] != null && x != "id") {
-                doc.text(0, v, x + ":" + citation[x])
-                v += 20;
-            }
-        }
-
-
-        doc.save('demo.pdf')
-    }
-    generateAllPDF = () => {
-        var doc = new jsPDF('p', 'pt');
-        let citazioni = this.temp;
-        let v = 20;
-        var c = 0;
-        doc.setFontSize(5);
-        doc.setFont("helvetica");
-        doc.setTextColor(0, 0, 255);
-        for (const x of citazioni) {
-            let citation = x;
-            c += 1;
-            if (c > 4) {
-                doc.addPage();
-                c = 0;
-                v = 20;
-            }
-            for (const y in citation) {
-                if (citation[y] != null) {
-                    doc.text(100, v, y + ":" + citation[y])
-                    v += 20;
-                }
-            }
-            v += 20;
-            doc.text(50, v, "              ")
-            doc.text(50, v + 20, "              ")
-        }
-        doc.setFont('helvetica')
-        doc.save('demo.pdf')
-    }
     downloadTxtFile = () => {
         const element = document.createElement("a");
         let citation = this.t;
@@ -395,6 +386,16 @@ export default class List extends React.Component {
         txt = txt.replace('$title', citation['title']);
         txt = txt.replace('$journal', citation['journal']);
         txt = txt.replace('$year', citation['year']);
+        txt = txt.replace('$volume', citation['volume']);
+        txt = txt.replace('$name', citation['name']);
+        txt = txt.replace('$pages', citation['pages']);
+        txt = txt.replace('$booktitle', citation['booktitle']);
+        txt = txt.replace('$address', citation['address']);
+        txt = txt.replace('$publisher', citation['publisher']);
+        txt = txt.replace('$series', citation['series']);
+        txt = txt.replace('$howpublished', citation['howpublished']);
+        txt = txt.replace('$note', citation['note']);
+        txt = txt.replace('undefined', '');
         console.log(txt);
         const file = new Blob([txt],
             {type: 'text/plain;charset=utf-8'});
@@ -406,24 +407,38 @@ export default class List extends React.Component {
     }
 
     generateAllTxt = () => {
-        const element = document.createElement("a");
         let citazioni = this.temp;
-        let txt = "";
+        const element = document.createElement("a");
+        let txt = document.getElementById("areaEx1").value;
+        let output = "";
         for (const x of citazioni) {
             let citation = x;
-            for (const y in citation) {
-                if (citation[y] != null && y != "id") {
-                    txt += y + ":" + citation[y] + "\n";
-                }
-            }
+            txt = txt.replace('$author', citation['author']);
+            txt = txt.replace('$title', citation['title']);
+            txt = txt.replace('$journal', citation['journal']);
+            txt = txt.replace('$year', citation['year']);
+            txt = txt.replace('$volume', citation['volume']);
+            txt = txt.replace('$name', citation['name']);
+            txt = txt.replace('$pages', citation['pages']);
+            txt = txt.replace('$booktitle', citation['booktitle']);
+            txt = txt.replace('$address', citation['address']);
+            txt = txt.replace('$publisher', citation['publisher']);
+            txt = txt.replace('$series', citation['series']);
+            txt = txt.replace('$howpublished', citation['howpublished']);
+            txt = txt.replace('$note', citation['note']);
+            txt = txt.replace('undefined', '');
             txt += "\n";
             txt += "\n";
+            output += txt;
+            txt = document.getElementById("areaEx1").value;
         }
-        const file = new Blob([txt],
+        console.log(output);
+        const file = new Blob([output],
             {type: 'text/plain;charset=utf-8'});
         element.href = URL.createObjectURL(file);
         element.download = "myFile.txt";
         document.body.appendChild(element);
         element.click();
+        document.getElementById("areaEx1").value = "";
     }
 }

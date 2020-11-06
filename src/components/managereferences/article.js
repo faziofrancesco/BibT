@@ -1,4 +1,5 @@
 import React from "react";
+import "./input-group.css"
 
 export default class Article extends React.Component {
     constructor(props) {
@@ -62,7 +63,10 @@ export default class Article extends React.Component {
             <div>
                 <form onSubmit={this.submitForm}>
                     <div className="input-group">
+
                         <label htmlFor="author">author</label>
+                        &emsp;
+                        &emsp;
                         <input
                             type="text"
                             name="author"
@@ -75,6 +79,8 @@ export default class Article extends React.Component {
                     </div>
                     <div className="input-group">
                         <label htmlFor="title">title</label>
+                        &emsp;
+                        &emsp;
                         <input
                             type="text"
                             name="title"
@@ -82,11 +88,12 @@ export default class Article extends React.Component {
                             value={this.state.values.title}
                             onChange={this.handleInputChange}
                             title="title"
-
                         />
                     </div>
                     <div className="input-group">
                         <label htmlFor="journal">journal</label>
+                        &emsp;
+                        &emsp;
                         <input
                             type="text"
                             name="journal"
@@ -99,6 +106,8 @@ export default class Article extends React.Component {
                     </div>
                     <div className="input-group">
                         <label htmlFor="year">year</label>
+                        &emsp;
+                        &emsp;
                         <input
                             type="number"
                             name="year"
@@ -111,6 +120,8 @@ export default class Article extends React.Component {
                     </div>
                     <div className="input-group">
                         <label htmlFor="volume">volume</label>
+                        &emsp;
+                        &emsp;
                         <input
                             type="text"
                             name="volume"
@@ -123,6 +134,8 @@ export default class Article extends React.Component {
                     </div>
                     <div className="input-group">
                         <label htmlFor="number">number</label>
+                        &emsp;
+                        &emsp;
                         <input
                             type="text"
                             name="number"
@@ -135,6 +148,8 @@ export default class Article extends React.Component {
                     </div>
                     <div className="input-group">
                         <label htmlFor="pages">pages</label>
+                        &emsp;
+                        &emsp;
                         <input
                             type="text"
                             name="pages"

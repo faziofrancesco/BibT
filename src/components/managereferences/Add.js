@@ -15,7 +15,6 @@ export default class Add extends React.Component {
             var text = reader.result;
             //console.log(reader.result.substring(0, 200));
             var bibtexParse = require('bibtex-parse-js');
-
             var sample = bibtexParse.toJSON(text);
             var cont = 0;
             while (cont != sample.length) {
@@ -40,6 +39,7 @@ export default class Add extends React.Component {
             }
         };
         reader.readAsText(input.files[0]);
+        window.location.reload(false)
     };
 
     render() {
