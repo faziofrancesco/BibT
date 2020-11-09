@@ -1,4 +1,6 @@
 import React from "react";
+import {toast, ToastContainer} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default class Misc extends React.Component {
     constructor(props) {
@@ -39,6 +41,7 @@ export default class Misc extends React.Component {
         !data.hasOwnProperty("error")
             ? this.setState({message: data.success})
             : this.setState({message: data.error, isError: true});
+        toast("add misc in your collection !");
 
         setTimeout(
             () =>
@@ -60,8 +63,7 @@ export default class Misc extends React.Component {
         return (
             <div>
                 <form onSubmit={this.submitForm}>
-                    <div className="input-group">
-                        <label htmlFor="author">author</label>
+                    <div className="input-group mb-3">
                         <input
                             type="text"
                             name="author"
@@ -69,11 +71,11 @@ export default class Misc extends React.Component {
                             value={this.state.values.author}
                             onChange={this.handleInputChange}
                             title="author"
-
+                            class="form-control"
+                            placeholder="Author"
                         />
                     </div>
-                    <div className="input-group">
-                        <label htmlFor="title">title</label>
+                    <div className="input-group mb-3">
                         <input
                             type="text"
                             name="title"
@@ -81,11 +83,11 @@ export default class Misc extends React.Component {
                             value={this.state.values.title}
                             onChange={this.handleInputChange}
                             title="title"
-
+                            class="form-control"
+                            placeholder="Title"
                         />
                     </div>
-                    <div className="input-group">
-                        <label htmlFor="howpublished">howpublished</label>
+                    <div className="input-group mb-3">
                         <input
                             type="text"
                             name="howpublished"
@@ -93,11 +95,12 @@ export default class Misc extends React.Component {
                             value={this.state.values.howpublished}
                             onChange={this.handleInputChange}
                             title="howpublished"
+                            class="form-control"
+                            placeholder="HowPublished"
 
                         />
                     </div>
-                    <div className="input-group">
-                        <label htmlFor="year">year</label>
+                    <div className="input-group mb-3">
                         <input
                             type="number"
                             name="year"
@@ -105,11 +108,11 @@ export default class Misc extends React.Component {
                             value={this.state.values.year}
                             onChange={this.handleInputChange}
                             title="year"
-
+                            class="form-control"
+                            placeholder="Year"
                         />
                     </div>
-                    <div className="input-group">
-                        <label htmlFor="note">note</label>
+                    <div className="input-group mb-3">
                         <input
                             type="text"
                             name="note"
@@ -117,10 +120,13 @@ export default class Misc extends React.Component {
                             value={this.state.values.note}
                             onChange={this.handleInputChange}
                             title="note"
-
+                            class="form-control"
+                            placeholder="Note"
                         />
                     </div>
-                    <button type="submit">Submit</button>
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                    <ToastContainer/>
+
                 </form>
                 <div className={`message ${this.state.isError && "error"}`}>
                     {this.state.isSubmitting ? "Submitting..." : this.state.message}

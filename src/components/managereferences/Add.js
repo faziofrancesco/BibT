@@ -1,4 +1,5 @@
 import React from "react";
+import {toast, ToastContainer} from "react-toastify";
 
 export default class Add extends React.Component {
     constructor(props) {
@@ -8,6 +9,8 @@ export default class Add extends React.Component {
     }
 
     openFile = function (event) {
+
+
         var input = event.target;
 
         var reader = new FileReader();
@@ -34,19 +37,26 @@ export default class Add extends React.Component {
                     })
                     .catch((error) => {
                         console.error('Error:', error);
+                        toast("Generic error!");
                     });
                 cont += 1
             }
+
+
         };
+        toast("add Bibtex file  in your collection!");
         reader.readAsText(input.files[0]);
-        window.location.reload(false)
+
+        document.getElementById("file").value = "";
     };
 
     render() {
         return (
             <span>
             <div>
-                <input type="file" id="file" accept='text' onChange={this.openFile}></input>
+                <input id="file" class="btn btn-primary" type="file" id="file" accept='text'
+                       onChange={this.openFile}></input>
+                  <ToastContainer/>
                 </div>
             </span>
         )

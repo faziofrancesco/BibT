@@ -1,7 +1,11 @@
 import React from "react";
-import "./input-group.css"
+
+
+import {toast, ToastContainer} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default class Article extends React.Component {
+
     constructor(props) {
         super(props);
         this.state = {
@@ -35,12 +39,17 @@ export default class Article extends React.Component {
             headers: {
                 "Content-Type": "application/json"
             }
+
         });
         this.setState({isSubmitting: false});
         const data = await res.json();
         !data.hasOwnProperty("error")
             ? this.setState({message: data.success})
-            : this.setState({message: data.error, isError: true});
+            : this.setState({message: data.error, isError: true,});
+
+
+        toast("add Article in your collection !");
+        
 
         setTimeout(
             () =>
@@ -62,11 +71,7 @@ export default class Article extends React.Component {
         return (
             <div>
                 <form onSubmit={this.submitForm}>
-                    <div className="input-group">
-
-                        <label htmlFor="author">author</label>
-                        &emsp;
-                        &emsp;
+                    <div className="input-group mb-3">
                         <input
                             type="text"
                             name="author"
@@ -74,13 +79,12 @@ export default class Article extends React.Component {
                             value={this.state.values.author}
                             onChange={this.handleInputChange}
                             title="author"
-
+                            class="form-control"
+                            placeholder="Author"
                         />
                     </div>
-                    <div className="input-group">
-                        <label htmlFor="title">title</label>
-                        &emsp;
-                        &emsp;
+                    <div className="input-group mb-3">
+
                         <input
                             type="text"
                             name="title"
@@ -88,12 +92,12 @@ export default class Article extends React.Component {
                             value={this.state.values.title}
                             onChange={this.handleInputChange}
                             title="title"
+                            class="form-control"
+                            placeholder="Title"
+
                         />
                     </div>
-                    <div className="input-group">
-                        <label htmlFor="journal">journal</label>
-                        &emsp;
-                        &emsp;
+                    <div className="input-group mb-3">
                         <input
                             type="text"
                             name="journal"
@@ -101,13 +105,13 @@ export default class Article extends React.Component {
                             value={this.state.values.journal}
                             onChange={this.handleInputChange}
                             title="journal"
+                            class="form-control"
+                            placeholder="Journal"
 
                         />
                     </div>
-                    <div className="input-group">
-                        <label htmlFor="year">year</label>
-                        &emsp;
-                        &emsp;
+                    <div className="input-group mb-3">
+
                         <input
                             type="number"
                             name="year"
@@ -115,13 +119,13 @@ export default class Article extends React.Component {
                             value={this.state.values.year}
                             onChange={this.handleInputChange}
                             title="year"
+                            class="form-control"
+                            placeholder="Year"
 
                         />
                     </div>
-                    <div className="input-group">
-                        <label htmlFor="volume">volume</label>
-                        &emsp;
-                        &emsp;
+                    <div className="input-group mb-3">
+
                         <input
                             type="text"
                             name="volume"
@@ -129,13 +133,13 @@ export default class Article extends React.Component {
                             value={this.state.values.volume}
                             onChange={this.handleInputChange}
                             title="volume"
+                            class="form-control"
+                            placeholder="Volume"
 
                         />
                     </div>
-                    <div className="input-group">
-                        <label htmlFor="number">number</label>
-                        &emsp;
-                        &emsp;
+                    <div className="input-group mb-3">
+
                         <input
                             type="text"
                             name="number"
@@ -143,13 +147,14 @@ export default class Article extends React.Component {
                             value={this.state.values.number}
                             onChange={this.handleInputChange}
                             title="number"
+                            class="form-control"
+                            placeholder="Number"
 
                         />
                     </div>
-                    <div className="input-group">
-                        <label htmlFor="pages">pages</label>
-                        &emsp;
-                        &emsp;
+                    <div className="input-group mb-3">
+
+
                         <input
                             type="text"
                             name="pages"
@@ -157,13 +162,18 @@ export default class Article extends React.Component {
                             value={this.state.values.pages}
                             onChange={this.handleInputChange}
                             title="pages"
+                            class="form-control"
+                            placeholder="Pages"
 
                         />
                     </div>
-                    <button type="submit">Submit</button>
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                    <ToastContainer/>
+
                 </form>
-                <div className={`message ${this.state.isError && "error"}`}>
-                    {this.state.isSubmitting ? "Submitting..." : this.state.message}
+
+                <div className={`message ${this.state.isError && " error"}`}>
+                    {this.state.isSubmitting ? " Submitting..." : this.state.message}
                 </div>
             </div>
         );

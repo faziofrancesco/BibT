@@ -3,6 +3,8 @@ import "citation-js";
 import Grafo from "./Grafo";
 import {Col, Container, Row} from "react-bootstrap";
 import Button from "@material-ui/core/Button";
+import {toast, ToastContainer} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default class CitationTree extends React.Component {
     constructor(props) {
@@ -38,7 +40,9 @@ export default class CitationTree extends React.Component {
 
         this.setState({
             searchAuthor: searchAuthor
+
         });
+
     }
 
     Attributes = function (attr) {
@@ -64,6 +68,14 @@ export default class CitationTree extends React.Component {
     }
 
     retrieveTutorials() {
+
+        this.setState({
+            tutorials: {
+                links: [],
+                nodes: [],
+
+            }
+        });
         console.log(this.state.tutorials)
         const {searchAuthor, profondita} = this.state;
         const params = this.getRequestParams(searchAuthor, profondita);
@@ -122,6 +134,7 @@ export default class CitationTree extends React.Component {
                     .then(response => response.json())
                     .then(dati => {
                         console.log('Success:', dati);
+                        toast("add Citation in your Citation list !");
                     })
                     .catch((error) => {
                         console.error('Error:', error);
@@ -145,10 +158,12 @@ export default class CitationTree extends React.Component {
         return (
             <span>
                 <div className="list row">
-                    <div className="col-md-8">
+                    <div className="col-md-10">
                         <div className="input-group mb-3">
                             <input
+
                                 type="text"
+
                                 className="form-control"
                                 placeholder="Search"
                                 value={searchAuthor}
@@ -201,10 +216,12 @@ export default class CitationTree extends React.Component {
                                 <Button style={{backgroundColor: "green", textAlign: "center"}} onClick={this.AddFile}>
                                     Add Bibtext
                                 </Button>}
+                                <ToastContainer/>
                             </div>
                         </Col>
                     </Row>
                 </Container>}
+
                 {tutorials.nodes.length == 0 && <span>Non esiste il grafo delle citazioni per la parola cercata</span>}
                     </span>
         );

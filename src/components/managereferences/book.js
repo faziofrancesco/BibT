@@ -1,4 +1,6 @@
 import React from "react";
+import {toast, ToastContainer} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default class Book extends React.Component {
     constructor(props) {
@@ -38,6 +40,7 @@ export default class Book extends React.Component {
         !data.hasOwnProperty("error")
             ? this.setState({message: data.success})
             : this.setState({message: data.error, isError: true});
+        toast("add book in your collection !");
 
         setTimeout(
             () =>
@@ -59,8 +62,8 @@ export default class Book extends React.Component {
         return (
             <div>
                 <form onSubmit={this.submitForm}>
-                    <div className="input-group">
-                        <label htmlFor="author">author</label>
+                    <div className="input-group mb-3">
+
                         <input
                             type="text"
                             name="author"
@@ -68,11 +71,12 @@ export default class Book extends React.Component {
                             value={this.state.values.author}
                             onChange={this.handleInputChange}
                             title="author"
+                            class="form-control"
+                            placeholder="Author"
 
                         />
                     </div>
-                    <div className="input-group">
-                        <label htmlFor="title">title</label>
+                    <div className="input-group mb-3">
                         <input
                             type="text"
                             name="title"
@@ -80,11 +84,12 @@ export default class Book extends React.Component {
                             value={this.state.values.title}
                             onChange={this.handleInputChange}
                             title="title"
+                            class="form-control"
+                            placeholder="Title"
 
                         />
                     </div>
-                    <div className="input-group">
-                        <label htmlFor="publisher">publisher</label>
+                    <div className="input-group mb-3">
                         <input
                             type="text"
                             name="publisher"
@@ -92,12 +97,12 @@ export default class Book extends React.Component {
                             value={this.state.values.publisher}
                             onChange={this.handleInputChange}
                             title="publisher"
-
+                            class="form-control"
+                            placeholder="Publisher"
                         />
                     </div>
 
-                    <div className="input-group">
-                        <label htmlFor="address">address</label>
+                    <div className="input-group mb-3">
                         <input
                             type="text"
                             name="address"
@@ -105,11 +110,11 @@ export default class Book extends React.Component {
                             value={this.state.values.address}
                             onChange={this.handleInputChange}
                             title="address"
-
+                            class="form-control"
+                            placeholder="Address"
                         />
                     </div>
-                    <div className="input-group">
-                        <label htmlFor="year">year</label>
+                    <div className="input-group mb-3">
                         <input
                             type="number"
                             name="year"
@@ -117,10 +122,13 @@ export default class Book extends React.Component {
                             value={this.state.values.year}
                             onChange={this.handleInputChange}
                             title="year"
-
+                            class="form-control"
+                            placeholder="Year"
                         />
                     </div>
-                    <button type="submit">Submit</button>
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                    <ToastContainer/>
+
                 </form>
                 <div className={`message ${this.state.isError && "error"}`}>
                     {this.state.isSubmitting ? "Submitting..." : this.state.message}

@@ -13,6 +13,7 @@ export default class List extends React.Component {
         this.handlePageSizeChange = this.handlePageSizeChange.bind(this);
         this.deleteCitation = this.deleteCitation.bind(this);
         this.deleteAllCitation = this.deleteAllCitation.bind(this)
+        this.handleChange = this.handleChange.bind(this);
         this.state = {
             tutorials: [],
             currentTutorial: null,
@@ -25,7 +26,22 @@ export default class List extends React.Component {
             currentId: 1,
             pageSize: 3,
             showModal: false
+            , author: "",
+            title: "",
+            howpublished: "",
+            note: "",
+            booktitle: "",
+            series: "",
+            year: "",
+            pages: "",
+            publisher: "",
+            address: "",
+            journal: "",
+            volume: "",
+            number: ""
         };
+
+
         this.t = 0;
         this.temp = []
         this.pageSizes = [3, 6, 9];
@@ -33,6 +49,14 @@ export default class List extends React.Component {
 
     componentDidMount() {
         this.retrieveTutorials();
+    }
+
+    handleChange(e, name) {
+        this.setState({
+            [name]: e.target.defaultValue
+
+        });
+        console.log([name])
     }
 
     refreshList() {
@@ -187,7 +211,7 @@ export default class List extends React.Component {
         return (
 
             <div className="list row">
-                
+
                 <div className="col-md-8">
                     <div className="input-group mb-3">
                         <input
@@ -252,7 +276,8 @@ export default class List extends React.Component {
                                 <div className="modal-content">
                                     <div className="modal-header">
                                         <h5 className="modal-title" id="exampleModalLongTitle">Export</h5>
-                                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                        <button type="button" className="close" data-dismiss="modal"
+                                                aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
@@ -262,7 +287,8 @@ export default class List extends React.Component {
                                         </form>
                                     </div>
                                     <div className="modal-footer">
-                                        <button type="button" className="btn btn-secondary" data-dismiss="modal">Close
+                                        <button type="button" className="btn btn-secondary"
+                                                data-dismiss="modal">Close
                                         </button>
                                         <button type="button" onClick={this.generateAllTxt} data-dismiss="modal"
                                                 className="btn btn-primary">Export
@@ -307,7 +333,13 @@ export default class List extends React.Component {
                                     data-target="#exampleModalCenter">
                                 Export
                             </button>
-
+                            &emsp;
+                            &emsp;
+                            <button type="button" style={{backgroundColor: "yellow"}} className="btn btn-primary"
+                                    data-toggle="modal"
+                                    data-target="#exampleModalCenter2">
+                                Update
+                            </button>
 
                             <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
                                  aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -315,26 +347,59 @@ export default class List extends React.Component {
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="exampleModalLongTitle">Export</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
                                         <div class="modal-body">
                                             <form>
-                                                <textarea rows="5" cols="60" id="areaEx" name="description"></textarea>
+                                                    <textarea rows="5" cols="60" id="areaEx"
+                                                              name="description"></textarea>
                                             </form>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
+                                            <button type="button" class="btn btn-secondary"
+                                                    data-dismiss="modal">Close
                                             </button>
-                                            <button type="button" onClick={this.downloadTxtFile} data-dismiss="modal"
+                                            <button type="button" onClick={this.downloadTxtFile}
+                                                    data-dismiss="modal"
                                                     class="btn btn-primary">Export
                                             </button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            <div className="modal fade" id="exampleModalCenter2" tabIndex="-1" role="dialog"
+                                 aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                <div className="modal-dialog modal-dialog-centered" role="document">
+                                    <div className="modal-content">
+                                        <div className="modal-header">
+                                            <h5 className="modal-title" id="exampleModalLongTitle">Update</h5>
+                                            <button type="button" className="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div className="modal-body">
+
+                                            {this.Update(currentTutorial)}
+
+                                        </div>
+                                        <div className="modal-footer">
+                                            <button type="button" className="btn btn-secondary"
+                                                    data-dismiss="modal">Close
+                                            </button>
+                                            <button type="button" data-dismiss="modal"
+                                                    onClick={this.updateCitation}
+                                                    className="btn btn-primary">Update
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+
                     ) : (
                         <div>
                             <br/>
@@ -352,12 +417,61 @@ export default class List extends React.Component {
 
 
         let template = this.generatemplate(Citation);
-        returnValue.push(<div>
+        returnValue.push(<form>
             {template}
-        </div>)
+        </form>)
 
         console.log(returnValue)
         return returnValue;
+    }
+    Update = function (Citation) {
+        let returnValue = []
+        let template = this.generateupdatetemplate(Citation);
+        returnValue.push(<form>{template}</form>)
+        return returnValue;
+    }
+
+    generateupdatetemplate(citation) {
+        let v = [];
+
+        for (const x in citation) {
+            if (x != "id" && x != "year") {
+                v.push(
+                    <div className="input-group mb-3">
+                        <input
+                            type="text"
+                            name={x}
+                            id={x}
+                            defaultValue={citation[x]}
+                            title={x}
+                            onChange={() => this.handleChange(x)}
+                            class="form-control"
+
+                            placeholder={x}
+                        />
+                    </div>
+                )
+            }
+            if (x == "year") {
+                v.push(
+                    <div className="input-group mb-3">
+                        <input
+                            type="number"
+                            name={x}
+                            id={x}
+                            title={x}
+                            defaultValue={citation[x]}
+                            onChange={() => this.handleChange(x)}
+                            class="form-control"
+                            placeholder={x}
+
+                        />
+                    </div>
+                )
+            }
+
+        }
+        return v;
     }
 
     generatemplate(citation) {
@@ -440,5 +554,10 @@ export default class List extends React.Component {
         document.body.appendChild(element);
         element.click();
         document.getElementById("areaEx1").value = "";
+    }
+    updateCitation = () => {
+        let citation = this.t;
+
+        console.log(this.state.year);
     }
 }
