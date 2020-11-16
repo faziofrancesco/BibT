@@ -23,7 +23,7 @@ public class ScrapingGoogleScholar {
 
         System.setProperty("webdriver.gecko.driver", "src/main/resources/geckodriver.exe");
         FirefoxOptions options = new FirefoxOptions();
-        options.addArguments("--window-size=1920,1200", "--ignore-certificate-errors", "--disable-extensions");
+        options.addArguments("--window-size=1920,1200", "--headless", "--ignore-certificate-errors", "--disable-extensions");
         driver = new FirefoxDriver(options);
         driver.manage().window().setPosition(new Point(0, 0));
         driver.manage().window().setSize(new Dimension(1920 / 2, 1200));
@@ -73,7 +73,6 @@ public class ScrapingGoogleScholar {
     public void Graph(int profondita) throws InterruptedException {
         int cont = 0;
         while (profondita != cont) {
-            Thread.sleep(10000);
             System.out.println(driver.getCurrentUrl());
             GoogleScholar gs1 = FirstResult();
             GoogleScholar gs2 = SecondResult();

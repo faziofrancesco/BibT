@@ -15,7 +15,7 @@ public class AddBib {
     public AddBib() throws InterruptedException {
         System.setProperty("webdriver.gecko.driver", "src/main/resources/geckodriver.exe");
         FirefoxOptions options = new FirefoxOptions();
-        options.addArguments("--window-size=1920,1200", "--ignore-certificate-errors", "--disable-extensions");
+        options.addArguments("--window-size=1920,1200", "--headless", "--ignore-certificate-errors", "--disable-extensions");
         driver = new FirefoxDriver(options);
         driver.manage().window().setPosition(new Point(0, 0));
         driver.manage().window().setSize(new Dimension(1920 / 2, 1200));

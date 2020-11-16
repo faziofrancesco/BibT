@@ -57,6 +57,52 @@ public class ManageReferences {
         return citation;
     }
 
+    @PostMapping(value = "/update")
+    public Citation update(@RequestBody Citation citation) {
+        if (citation instanceof Misc) {
+            Misc m = miscRepository.findById(((Misc) citation).getId()).get();
+            m.setAuthor(((Misc) citation).getAuthor());
+            m.setHowpublished(((Misc) citation).getHowpublished());
+            m.setNote(((Misc) citation).getNote());
+            m.setTitle(((Misc) citation).getTitle());
+            m.setYear(((Misc) citation).getYear());
+            miscRepository.save(m);
+        }
+        if (citation instanceof Article) {
+            Article c = articleRepository.findById(((Article) citation).getId()).get();
+            c.setAuthor(((Article) citation).getAuthor());
+            c.setJournal(((Article) citation).getJournal());
+            c.setNumber(((Article) citation).getNumber());
+            c.setPages(((Article) citation).getPages());
+            c.setVolume(((Article) citation).getVolume());
+            c.setYear(((Article) citation).getYear());
+            c.setTitle(((Article) citation).getTitle());
+            articleRepository.save(c);
+        }
+        if (citation instanceof Inproceedings) {
+            Inproceedings c = rep.findById(((Inproceedings) citation).getId()).get();
+            c.setAuthor(((Inproceedings) citation).getAuthor());
+            c.setAddress(((Inproceedings) citation).getAddress());
+            c.setBooktitle(((Inproceedings) citation).getBooktitle());
+            c.setPages(((Inproceedings) citation).getPages());
+            c.setPublisher(((Inproceedings) citation).getPublisher());
+            c.setYear(((Inproceedings) citation).getYear());
+            c.setSeries(((Inproceedings) citation).getSeries());
+            c.setTitle(((Inproceedings) citation).getTitle());
+            rep.save(c);
+        }
+        if (citation instanceof Book) {
+            Book c = repository.findById(((Book) citation).getId()).get();
+            c.setAuthor(((Book) citation).getAuthor());
+            c.setPublisher(((Book) citation).getPublisher());
+            c.setAddress(((Book) citation).getAddress());
+            c.setYear(((Book) citation).getYear());
+            c.setTitle(((Book) citation).getTitle());
+            repository.save(c);
+        }
+        return citation;
+    }
+
     @GetMapping(value = "/searchBib")
     public ResponseEntity<Map<String, Object>> GetBib(
             @RequestParam(name = "title", defaultValue = "ciao") String title,
