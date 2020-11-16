@@ -1,6 +1,8 @@
 import React from "react";
 import "citation-js";
 import Pagination from "@material-ui/lab/Pagination";
+import {toast, ToastContainer} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default class List extends React.Component {
     constructor(props) {
@@ -14,6 +16,7 @@ export default class List extends React.Component {
         this.deleteCitation = this.deleteCitation.bind(this);
         this.deleteAllCitation = this.deleteAllCitation.bind(this)
         this.handleChange = this.handleChange.bind(this);
+
         this.state = {
             tutorials: [],
             currentTutorial: null,
@@ -25,20 +28,23 @@ export default class List extends React.Component {
             currentTitle: "",
             currentId: 1,
             pageSize: 3,
-            showModal: false
-            , author: "",
+            showModal: false,
+            author: "",
             title: "",
             howpublished: "",
+            year: "",
             note: "",
             booktitle: "",
             series: "",
-            year: "",
             pages: "",
             publisher: "",
             address: "",
             journal: "",
             volume: "",
-            number: ""
+            number: "",
+            id: ""
+
+
         };
 
 
@@ -51,12 +57,38 @@ export default class List extends React.Component {
         this.retrieveTutorials();
     }
 
-    handleChange(e, name) {
-        this.setState({
-            [name]: e.target.defaultValue
+    submitForm = async e => {
+        e.preventDefault();
+        let citation = this.t;
+        let values = {}
+        for (const i in citation) {
+            if (i != "name") {
+                if (this.state[i] == "") {
+                    values[i] = citation[i];
+                } else {
+                    values[i] = this.state[i];
+                }
+            } else {
+                values["@type"] = citation["name"];
+            }
+        }
+        const res = await fetch("/update", {
 
-        });
-        console.log([name])
+            method: "POST",
+            body: JSON.stringify(values),
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+        }).then(data => {
+            toast("Update your citation");
+            this.refreshList()
+        })
+            .catch((error) => {
+                toast("Error in your Citation or Generic Error");
+                this.refreshList()
+            });
+
     }
 
     refreshList() {
@@ -65,6 +97,12 @@ export default class List extends React.Component {
             currentTutorial: null,
             currentIndex: -1,
         });
+    }
+
+    handleChange(input, value) {
+        this.setState({
+            [input]: value
+        })
     }
 
     onChangeSearchTitle(e) {
@@ -83,6 +121,7 @@ export default class List extends React.Component {
             });
         window.location.reload(false)
     }
+
 
     deleteCitation() {
         console.log(this.t)
@@ -335,7 +374,7 @@ export default class List extends React.Component {
                             </button>
                             &emsp;
                             &emsp;
-                            <button type="button" style={{backgroundColor: "yellow"}} className="btn btn-primary"
+                            <button type="button" style={{backgroundColor: "blue"}} className="btn btn-primary"
                                     data-toggle="modal"
                                     data-target="#exampleModalCenter2">
                                 Update
@@ -391,13 +430,16 @@ export default class List extends React.Component {
                                                     data-dismiss="modal">Close
                                             </button>
                                             <button type="button" data-dismiss="modal"
-                                                    onClick={this.updateCitation}
+                                                    onClick={this.submitForm}
                                                     className="btn btn-primary">Update
+
                                             </button>
+
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            <ToastContainer/>
                         </div>
 
                     ) : (
@@ -444,15 +486,13 @@ export default class List extends React.Component {
                             id={x}
                             defaultValue={citation[x]}
                             title={x}
-                            onChange={() => this.handleChange(x)}
                             class="form-control"
-
+                            onChange={e => this.handleChange(x, e.target.value)}
                             placeholder={x}
                         />
                     </div>
                 )
-            }
-            if (x == "year") {
+            } else if (x != "id" && x == "year") {
                 v.push(
                     <div className="input-group mb-3">
                         <input
@@ -461,7 +501,7 @@ export default class List extends React.Component {
                             id={x}
                             title={x}
                             defaultValue={citation[x]}
-                            onChange={() => this.handleChange(x)}
+                            onChange={e => this.handleChange(x, e.target.value)}
                             class="form-control"
                             placeholder={x}
 
@@ -555,9 +595,5 @@ export default class List extends React.Component {
         element.click();
         document.getElementById("areaEx1").value = "";
     }
-    updateCitation = () => {
-        let citation = this.t;
 
-        console.log(this.state.year);
-    }
 }
