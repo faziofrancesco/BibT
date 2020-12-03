@@ -1,6 +1,8 @@
 package com.fazio.bib.Controller;
 
 import com.fazio.bib.Service.AddBib;
+import com.fazio.bib.Service.ExportBib;
+import com.fazio.bib.Service.SearchJournal;
 import com.fazio.bib.entity.*;
 import com.fazio.bib.repository.ArticleRepository;
 import com.fazio.bib.repository.BookRepository;
@@ -55,6 +57,29 @@ public class ManageReferences {
                 repository.save(c);
         }
         return citation;
+    }
+
+    @PostMapping(value = "/ExBib")
+    public ResponseEntity<Map<String, Object>> ExBib(@RequestBody Citation citation) throws InterruptedException {
+        try {
+            ExportBib b = new ExportBib();
+            b.SetType(citation.getName());
+            String attributes = b.GetAttributes(citation);
+            Map<String, Object> response = new HashMap<>();
+            response.put("attributes", attributes);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        }
+    }
+
+    @GetMapping(value = "/searchjournal")
+    public void search(@RequestParam(required = true, name = "journal", defaultValue = "journal") String journal) throws InterruptedException {
+        SearchJournal s = new SearchJournal();
+        s.SetJournal(journal);
+        s.GoPage();
+
     }
 
     @PostMapping(value = "/update")

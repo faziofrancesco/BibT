@@ -2,7 +2,7 @@ package com.fazio.bib.Controller;
 
 import com.fazio.bib.Service.Links;
 import com.fazio.bib.Service.Nodes;
-import com.fazio.bib.Service.ScrapingGoogleScholar;
+import com.fazio.bib.Service.ScrapingGoogleScholar1;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +21,12 @@ public class CitationGraph {
     public ResponseEntity<Map<String, Object>> viewGraph(
 
             @RequestParam(required = true, name = "author", defaultValue = "cauteruccio") String title,
-            @RequestParam(name = "profondita", defaultValue = "2") int profondita) {
+            @RequestParam(name = "profondita", defaultValue = "2") int profondita,
+            @RequestParam(name = "risultati", defaultValue = "2") int risultati) {
         try {
-            ScrapingGoogleScholar s = new ScrapingGoogleScholar();
+            ScrapingGoogleScholar1 s = new ScrapingGoogleScholar1();
             // message = s.Scraping(profondita, title);
-            s.Scraping(profondita, title);
+            s.Scraping(profondita, risultati, title);
             ArrayList<Nodes> nodes;
             nodes = s.GetNodes();
             ArrayList<Links> links;
